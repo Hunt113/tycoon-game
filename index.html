@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cyber Tycoon 4.0: Settings & Sound Update</title>
+    <!-- 📲 MOBILE ZOOM FIX: maximum-scale and user-scalable=no prevent the screen from zooming on fast double-taps -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cyber Tycoon 4.0: Settings & Mobile Fix</title>
     <style>
         /* CSS Variables to handle Themes dynamically */
         :root {
@@ -209,7 +210,15 @@
             cursor: not-allowed; 
         }
         
-        .click-btn { background: var(--text-main); color: var(--bg-window); justify-content: center; font-size: 1.1rem; margin-bottom: 10px; }
+        /* ⚡ TOUCH ACTION FIX: Tells mobile browsers to click instantly instead of checking for double-taps */
+        .click-btn { 
+            background: var(--text-main); 
+            color: var(--bg-window); 
+            justify-content: center; 
+            font-size: 1.1rem; 
+            margin-bottom: 10px; 
+            touch-action: manipulation; 
+        }
         .click-btn:hover:not(:disabled) { background: var(--text-main); filter: brightness(0.9); }
         
         .settings-icon-btn {
@@ -313,6 +322,7 @@
 
         <!-- Scrollable Shop Interface -->
         <div class="scrollable-content">
+            <!-- Main Tap Button equipped with touch-action protection -->
             <button class="click-btn" onclick="clickGain()">⚡ Tap Mainframe Terminal (+$<span id="click-val-display">1</span>)</button>
             <button id="frenzy-trigger" class="frenzy-btn" style="display: none;" onclick="startFrenzy()">🔥 ACTIVATE CORE OVERDRIVE (5x OUTPUT)</button>
 
@@ -401,7 +411,6 @@
                 osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
                 
                 gainNode.gain.setValueAtTime(globalVolumeSetting * 0.1, audioCtx.currentTime);
-                // Linear decay curve
                 gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
                 
                 osc.connect(gainNode);
@@ -409,7 +418,7 @@
                 
                 osc.start();
                 osc.stop(audioCtx.currentTime + duration);
-            } catch(e) { console.log("Audio not allowed to spin up yet."); }
+            } catch(e) { console.log("Audio activation context deferred."); }
         }
 
         function soundClick() { playSynthSound(587.33, 'triangle', 0.08); }
@@ -532,7 +541,6 @@
         }
 
         function clickGain() {
-            // Web Audio requirements on browser window triggers
             if(audioCtx.state === 'suspended') audioCtx.resume();
             gameData.cash += getClickPower();
             soundClick();
@@ -601,7 +609,7 @@
             }
         }
 
-        /* --- Settings Panel Application Interface Systems --- */
+        /* Settings Configurations and Profile Management Layers */
         function toggleSettings(open) {
             document.getElementById('settings-modal').style.display = open ? 'flex' : 'none';
         }
@@ -630,9 +638,9 @@
         }
 
         function exportSaveData() {
-            let stringified = btoa(JSON.stringify(gameData)); // Simple base64 data encoding layer
+            let stringified = btoa(JSON.stringify(gameData));
             navigator.clipboard.writeText(stringified).then(() => {
-                alert("Profile save string copied into active clipboard cache!");
+                alert("Profile save string copied to device clipboard!");
             });
         }
 
@@ -651,10 +659,8 @@
                     if (parsed.owned) gameData.owned = { ...gameData.owned, ...parsed.owned };
                     if (parsed.clicksOwned) gameData.clicksOwned = { ...gameData.clicksOwned, ...parsed.clicksOwned };
                     
-                    // Core Configuration synchronization sets
                     if (parsed.settings) {
                         gameData.settings = { ...gameData.settings, ...parsed.settings };
-                        // Apply stored preferences to actual document models
                         document.getElementById('theme-select').value = gameData.settings.theme;
                         changeTheme(gameData.settings.theme);
                         
@@ -664,7 +670,7 @@
                         document.getElementById('motion-toggle').checked = gameData.settings.reduceMotion;
                         toggleMotion(gameData.settings.reduceMotion);
                     }
-                } catch(e) { console.error("Database backup file fault encountered.", e); }
+                } catch(e) { console.error("Database structural fault encountered on recovery step.", e); }
             }
             recalculateIncome();
             updateXpBar();
@@ -672,12 +678,13 @@
         }
 
         function resetGame() {
-            if (confirm("Reset everything permanently? You will lose all achievements and settings configurations.")) {
+            if (confirm("Reset everything permanently? You will lose all achievements and configurations.")) {
                 localStorage.removeItem('cyber_tycoon_v4_save');
                 location.reload();
             }
         }
 
+        // Clock step loops running calculation cycles every 100ms
         setInterval(function() {
             gameData.cash += (gameData.income / 10);
             updateUI();
