@@ -1,1 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Web Tycoon</title>
+    <style>
+        /* Modern, clean Dark Theme styling */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #121214; 
+            color: #e1e1e6; 
+            text-align: center; 
+            padding: 20px; 
+            margin: 0;
+        }
+        .container { 
+            max-width: 480px; 
+            margin: 40px auto; 
+            background: #202024; 
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
+            border: 1px solid #29292e;
+        }
+        h1 { color: #00ff88; font-size: 2.6rem; margin: 0 0 10px 0; }
+        p { color: #8f8f98; margin: 0 0 20px 0; }
+        .stat-box {
+            background: #121214;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        .stat { font-size: 2.2rem; font-weight: bold; color: #ffffff; }
+        .sub-stat { font-size: 1.1rem; color: #00ff88; margin-top: 5px; }
+        button { 
+            background: #00ff88; 
+            color: #121214; 
+            border: none; 
+            padding: 15px; 
+            font-size: 1.1rem; 
+            font-weight: bold; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            margin: 8px 0; 
+            width: 100%; 
+            display: flex;
+            justify-content: space-between;
+            box-sizing: border-box;
+        }
+        button:hover:not(:disabled) { 
+            background: #00cc76; 
+            transform: translateY(-2px); 
+        }
+        button:active:not(:disabled) { transform: translateY(0); }
+        button:disabled { 
+            background: #29292e; 
+            color: #7c7c8a; 
+            cursor: not-allowed; 
+        }
+        .upgrade-section { 
+            border-top: 2px solid #29292e; 
+            margin-top: 25px; 
+            padding-top: 15px; 
+        }
+        .upgrade-section h3 { margin-bottom: 15px; color: #a8a8b3; text-align: left; }
+        .danger-btn {
+            background: #ff3344;
+            color: white;
+            font-size: 0.9rem;
+            padding: 8px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .danger-btn:hover { background: #d92231; }
+    </style>
+</head>
+<body>
 
+    <div class="container">
+        <h1>Neon Tycoon</h1>
+        <p>Your web-based incremental empire</p>
+        
+        <div class="stat-box">
+            <div class="stat">$<span id="cash-display">0</span></div>
+            <div class="sub-stat">+$<span id="income-display">0</span> / sec</div>
+        </div>
+
+        <!-- Manual clicker button -->
+        <button onclick="clickGain()" style="justify-content: center; background: #ffffff; color: #121214;">
+            ⚡ Click for Cash (+$1)
+        </button>
+
+        <!-- Upgrades Section -->
+        <div class="upgrade-section">
+            <h3>Buy Production Droppers</h3>
+            
+            <button id="dropper1-btn" onclick="buyAsset('dropper1', 15, 1, 1.4)">
+                <span>🏗️ Basic Dropper (+1/s)</span>
+                <span id="dropper1-cost">$15</span>
+            </button>
+            
+            <button id="dropper2-btn" onclick="buyAsset('dropper2', 120, 10, 1.5)">
+                <span>🚀 Plasma Dropper (+10/s)</span>
+                <span id="dropper2-cost">$120</span>
+            </button>
+
+            <button id="dropper3-btn" onclick="buyAsset('dropper3', 1000, 95, 1.6)">
+                <span>🌌 Quantum Core (+95/s)</span>
+                <span id="dropper3-cost">$1,000</span>
+            </button>
+        </div>
+
+        <button class="danger-btn" onclick="resetGame()">⚠️ Reset Entire Tycoon</button>
+    </div>
+
+    <script>
+        // Default Game Configuration and Base Costs
+        const baseConfigs = {
+            dropper1: { baseCost: 15, incomeVal: 1, scale: 1.4 },
+            dropper2: { baseCost: 120, incomeVal: 10, scale: 1.5 },
+            dropper3: { baseCost: 1000, incomeVal: 95, scale: 1.6 }
+        };
+
+        // Live Dynamic State variables
+        let gameData = {
+            cash: 0,
+            income: 0,
+            owned: { dropper1: 0, dropper2: 0, dropper3: 0 }
+        };
+
+        // Helper: Calculate upgrade cost based on how many you already own
+        function getCost(type) {
+            let conf = baseConfigs[type];
+            let count = gameData.owned[type];
+            return Math.floor(conf.baseCost * Math.pow(conf.scale, count));
+        }
+
+        // Helper: Recalculate the overall cash generation per second
+        function recalculateIncome() {
+            let total = 0;
+            for (let key in baseConfigs) {
+                total += gameData.owned[key] * baseConfigs[key].incomeVal;
+            }
+            gameData.income = total;
+        }
+
+        function updateUI() {
+            document.getElementById('cash-display').innerText = Math.floor(gameData.cash).toLocaleString();
+            document.getElementById('income-display').innerText = gameData.income.toLocaleString();
+
+            // Handle price tracking and disabling mechanics dynamically
+            for (let key in baseConfigs) {
+                let currentCost = getCost(key);
+                document.getElementById(`${key}-cost`).innerText = `$${currentCost.toLocaleString()}`;
+                document.getElementById(`${key}-btn`).disabled = gameData.cash < currentCost;
+            }
+        }
+
+        function clickGain() {
+            gameData.cash += 1;
+            updateUI();
+        }
+
+        function buyAsset(type) {
+            let cost = getCost(type);
+            if (gameData.cash >= cost) {
+                gameData.cash -= cost;
+                gameData.owned[type]++;
+                recalculateIncome();
+                updateUI();
+                saveGame();
+            }
+        }
+
+        // --- Save System Logic ---
+        function saveGame() {
+            localStorage.setItem('neon_tycoon_save', JSON.stringify(gameData));
+        }
+
+        function loadGame() {
+            let saved = localStorage.getItem('neon_tycoon_save');
+            if (saved) {
+                try {
+                    let parsed = JSON.parse(saved);
+                    // Standard structural sanity checks
+                    if (typeof parsed.cash === 'number') gameData.cash = parsed.cash;
+                    if (parsed.owned) gameData.owned = { ...gameData.owned, ...parsed.owned };
+                    recalculateIncome();
+                } catch(e) {
+                    console.error("Save corrupted, loading defaults", e);
+                }
+            }
+            updateUI();
+        }
+
+        function resetGame() {
+            if (confirm("Are you sure you want to completely clear your save?")) {
+                localStorage.removeItem('neon_tycoon_save');
+                gameData = { cash: 0, income: 0, owned: { dropper1: 0, dropper2: 0, dropper3: 0 } };
+                updateUI();
+            }
+        }
+
+        // --- Main Intervals ---
+        // Run game loop math updates every 100 milliseconds (0.1s)
+        setInterval(function() {
+            gameData.cash += (gameData.income / 10);
+            updateUI();
+        }, 100);
+
+        // Autosave system running behind the scenes every 15 seconds
+        setInterval(saveGame, 15000);
+
+        // Run loading setup when webpage opens
+        window.onload = loadGame;
+    </script>
+</body>
+</html>
