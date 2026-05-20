@@ -3,64 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega Multi-Stage Tycoon</title>
+    <title>Neon Tycoon 3.0: Cyber Overdrive</title>
     <style>
-        /* Base setup to lock scroll behavior to the container instead of the whole screen */
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
-            background: #0f0f12; 
+            background: #0a0a0d; 
             color: #e1e1e6; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Fixed viewport app container */
         .app-window {
             width: 100%;
             max-width: 550px;
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background: #19191c;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-            border-left: 1px solid #29292e;
-            border-right: 1px solid #29292e;
+            background: #13131a;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.15);
+            border-left: 1px solid #22222b;
+            border-right: 1px solid #22222b;
             box-sizing: border-box;
+            position: relative;
         }
 
-        /* Top Header Stats Banner */
+        /* Top Header Panel */
         .header-panel {
             padding: 20px 25px 15px 25px;
-            background: #1d1d22;
-            border-bottom: 2px solid #29292e;
+            background: #1a1a24;
+            border-bottom: 2px solid #29293d;
         }
-        h1 { color: #00ff88; font-size: 2.2rem; margin: 0 0 5px 0; }
-        .tagline { color: #8f8f98; margin: 0 0 15px 0; font-size: 0.9rem; }
+        
+        .title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        h1 { color: #00ff88; font-size: 2.1rem; margin: 0; text-shadow: 0 0 10px rgba(0,255,136,0.3); }
+        
+        .level-badge {
+            background: #0077ff;
+            color: white;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            box-shadow: 0 0 8px rgba(0,119,255,0.4);
+        }
+        
+        .xp-bar-bg {
+            background: #22222b;
+            height: 6px;
+            width: 100%;
+            border-radius: 3px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        
+        .xp-bar-fill {
+            background: #0077ff;
+            height: 100%;
+            width: 0%;
+            transition: width 0.2s ease;
+        }
         
         .dashboard {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
+        
         .stat-box {
-            background: #121214;
+            background: #0d0d12;
             padding: 10px;
-            border-radius: 10px;
-            border: 1px solid #222226;
+            border-radius: 8px;
+            border: 1px solid #22222b;
             text-align: center;
         }
-        .stat-box.full { grid-column: span 2; }
-        .stat { font-size: 1.9rem; font-weight: bold; color: #ffffff; }
-        .stat-lbl { font-size: 0.75rem; color: #8f8f98; text-transform: uppercase; letter-spacing: 1px; }
-        .sub-stat { font-size: 1rem; color: #00ff88; font-weight: bold; }
-        .rebirth-stat { color: #a33eff; font-size: 1.2rem; font-weight: bold; }
+        .stat-box.full { grid-column: span 2; position: relative; }
+        .stat { font-size: 2.2rem; font-weight: bold; color: #ffffff; }
+        .stat-lbl { font-size: 0.7rem; color: #8f8f98; text-transform: uppercase; letter-spacing: 1px; }
+        .sub-stat { font-size: 1.1rem; color: #00ff88; font-weight: bold; }
+        .rebirth-stat { color: #a33eff; font-size: 1.1rem; font-weight: bold; }
 
-        /* Middle SCROLLABLE panel for upgrades and buttons */
+        /* Frenzy Banner Alerts */
+        .frenzy-alert {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #ff0055;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: white;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            text-shadow: 0 0 10px rgba(255,0,85,0.6);
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.02); } }
+
+        /* Scrollable Content Arena */
         .scrollable-content {
             flex: 1;
             overflow-y: auto;
@@ -68,13 +121,13 @@
             box-sizing: border-box;
         }
 
-        /* Action Buttons styling */
+        /* Standard Game Action Buttons */
         button { 
             background: #00ff88; 
-            color: #121214; 
+            color: #0d0d12; 
             border: none; 
             padding: 14px; 
-            font-size: 1rem; 
+            font-size: 0.95rem; 
             font-weight: bold; 
             border-radius: 8px; 
             cursor: pointer; 
@@ -87,43 +140,83 @@
             box-sizing: border-box;
         }
         button:hover:not(:disabled) { 
-            background: #00cc76; 
-            transform: translateY(-1px); 
+            background: #26ff9d; 
+            transform: scale(1.01);
+            box-shadow: 0 0 12px rgba(0,255,136,0.3);
         }
+        button:active:not(:disabled) { transform: scale(0.99); }
         button:disabled { 
-            background: #222226; 
-            color: #575761; 
+            background: #1a1a24; 
+            color: #4e4e5e; 
             cursor: not-allowed; 
         }
         
-        .click-btn { background: #ffffff; color: #121214; justify-content: center; font-size: 1.1rem; margin-bottom: 15px; }
-        .click-btn:hover:not(:disabled) { background: #e1e1e6; }
+        .click-btn { background: #ffffff; color: #0d0d12; justify-content: center; font-size: 1.1rem; margin-bottom: 10px; }
+        .click-btn:hover:not(:disabled) { background: #f0f0f5; box-shadow: 0 0 12px rgba(255,255,255,0.2); }
         
+        /* Overdrive Engine System */
+        .frenzy-btn {
+            background: linear-gradient(45deg, #ff0055, #ff5500);
+            color: white;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(255,0,85,0.4);
+            animation: flashGlow 2s infinite;
+        }
+        @keyframes flashGlow { 
+            0%, 100% { box-shadow: 0 0 10px rgba(255,0,85,0.4); } 
+            50% { box-shadow: 0 0 25px rgba(255,0,85,0.8); } 
+        }
+
         .rebirth-btn { background: #a33eff; color: white; justify-content: center; font-size: 1.1rem; margin-top: 15px;}
-        .rebirth-btn:hover:not(:disabled) { background: #882ec7; }
+        .rebirth-btn:hover:not(:disabled) { background: #b452ff; box-shadow: 0 0 15px rgba(163,62,255,0.4); }
 
         .section-title { 
-            margin: 20px 0 10px 0; 
-            color: #a8a8b3; 
+            margin: 25px 0 10px 0; 
+            color: #8f8f98; 
             text-align: left; 
-            font-size: 1.1rem;
-            border-bottom: 1px solid #29292e;
-            padding-bottom: 5px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid #22222b;
+            padding-bottom: 4px;
         }
         
+        /* Milestone Badge Grid */
+        .badge-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin: 10px 0 20px 0;
+        }
+        .badge {
+            background: #1a1a24;
+            border: 1px solid #29293d;
+            padding: 10px 4px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            color: #575761;
+            font-weight: bold;
+        }
+        .badge.unlocked {
+            border-color: #ffaa00;
+            color: #ffaa00;
+            background: rgba(255, 170, 0, 0.05);
+            text-shadow: 0 0 5px rgba(255,170,0,0.2);
+        }
+
         .danger-btn {
             background: transparent; color: #ff3344; border: 1px solid #3d1418;
-            font-size: 0.85rem; padding: 6px; margin: 25px 0; justify-content: center; width: auto; display: inline-flex;
+            font-size: 0.8rem; padding: 6px 12px; margin: 25px 0; justify-content: center; width: auto; display: inline-flex;
         }
         .danger-btn:hover { background: #3d1418; }
 
-        /* FIXED UN-SCROLLABLE BOTTOM FOOTER BRANDING */
+        /* Pinned Non-Scroll Footer */
         .fixed-footer {
-            background: #121214;
-            padding: 15px 0;
-            border-top: 2px solid #29292e;
-            color: #8f8f98;
-            font-size: 1rem;
+            background: #0d0d12;
+            padding: 16px 0;
+            border-top: 2px solid #22222b;
+            color: #62626e;
+            font-size: 0.95rem;
             font-weight: bold;
             letter-spacing: 0.8px;
             text-align: center;
@@ -139,107 +232,118 @@
 
     <div class="app-window">
         
-        <!-- Header Panel: Stays dynamic but stuck on top -->
+        <!-- Header Banner Container -->
         <div class="header-panel">
-            <h1>Neon Tycoon 2.5</h1>
-            <div class="tagline">Advanced Clicks & Infinite Multipliers</div>
+            <div class="title-row">
+                <h1>Cyber Tycoon</h1>
+                <div class="level-badge">LVL <span id="lvl-display">1</span></div>
+            </div>
+            
+            <div class="xp-bar-bg">
+                <div id="xp-fill" class="xp-bar-fill"></div>
+            </div>
             
             <div class="dashboard">
                 <div class="stat-box full">
                     <div class="stat">$<span id="cash-display">0</span></div>
-                    <div class="stat-lbl">Available Cash</div>
+                    <div class="stat-lbl">Network Liquidity</div>
+                    <div id="frenzy-overlay" class="frenzy-alert">⚠️ OVERDRIVE FRENZY x5!!</div>
                 </div>
                 <div class="stat-box">
                     <div class="sub-stat">+$<span id="income-display">0</span>/s</div>
-                    <div class="stat-lbl">Auto Income</div>
+                    <div class="stat-lbl">Automation Rate</div>
                 </div>
                 <div class="stat-box">
                     <div class="rebirth-stat">x<span id="multiplier-display">1</span></div>
-                    <div class="stat-lbl">Rebirth Multiplier</div>
+                    <div class="stat-lbl">Multiplier</div>
                 </div>
             </div>
         </div>
 
-        <!-- Scrollable Center Panel: Only upgrades scroll up and down -->
+        <!-- Dynamic Game Window -->
         <div class="scrollable-content">
             
+            <!-- Standard Click Action -->
             <button class="click-btn" onclick="clickGain()">
-                ⚡ Click to Earn (+$<span id="click-val-display">1</span>)
+                ⚡ Tap Mainframe Terminal (+$<span id="click-val-display">1</span>)
             </button>
 
-            <!-- Expanded Manual Click Upgrades Section -->
-            <div class="section-title">Manual Click Upgrades</div>
-            
+            <!-- Overdrive Trigger -->
+            <button id="frenzy-trigger" class="frenzy-btn" style="display: none;" onclick="startFrenzy()">
+                🔥 ACTIVATE CORE OVERDRIVE (5x ALL OUTPUTS)
+            </button>
+
+            <!-- Milestones Achievements -->
+            <div class="section-title">Global Perks (Stackable Speed Boosts)</div>
+            <div class="badge-row">
+                <div id="ach0" class="badge">💰<br>$10K Cash</div>
+                <div id="ach1" class="badge">🏭<br>10 Assets</div>
+                <div id="ach2" class="badge">🌟<br>Level 5</div>
+                <div id="ach3" class="badge">👑<br>First Rebirth</div>
+            </div>
+
+            <!-- Upgrades Level Array -->
+            <div class="section-title">Manual Click Configurations</div>
             <button id="click1-btn" onclick="buyClickUpgrade('click1')">
-                <span>👆 Plastic Mouse (+2 per click)</span>
+                <span>👆 Plastic Mouse (+2/click)</span>
                 <span id="click1-cost">$25</span>
             </button>
-            
             <button id="click2-btn" onclick="buyClickUpgrade('click2')">
-                <span>⚡ Copper Wiring (+15 per click)</span>
+                <span>⚡ Copper Wiring (+15/click)</span>
                 <span id="click2-cost">$200</span>
             </button>
-
             <button id="click3-btn" onclick="buyClickUpgrade('click3')">
-                <span>🔋 Kinetic Battery (+110 per click)</span>
+                <span>🔋 Kinetic Battery (+110/click)</span>
                 <span id="click3-cost">$1,500</span>
             </button>
-
             <button id="click4-btn" onclick="buyClickUpgrade('click4')">
-                <span>🧠 Neural Link (+850 per click)</span>
+                <span>🧠 Neural Link (+850/click)</span>
                 <span id="click4-cost">$12,000</span>
             </button>
-
             <button id="click5-btn" onclick="buyClickUpgrade('click5')">
-                <span>🌌 Quantum Hand (+6,500 per click)</span>
+                <span>🌌 Quantum Hand (+6.5K/click)</span>
                 <span id="click5-cost">$95,000</span>
             </button>
 
-            <!-- Automatic Income Section -->
-            <div class="section-title">Automatic Industrial Droppers</div>
-            
+            <!-- Industry Levels System -->
+            <div class="section-title">Industrial Dropper Subsystems</div>
             <button id="dropper1-btn" onclick="buyAsset('dropper1')">
                 <span>🏗️ Basic Dropper (<span id="d1-inc"></span>/s)</span>
                 <span id="dropper1-cost">$15</span>
             </button>
-            
             <button id="dropper2-btn" onclick="buyAsset('dropper2')">
                 <span>🚀 Plasma Dropper (<span id="d2-inc"></span>/s)</span>
                 <span id="dropper2-cost">$150</span>
             </button>
-
             <button id="dropper3-btn" onclick="buyAsset('dropper3')">
                 <span>🌌 Quantum Core (<span id="d3-inc"></span>/s)</span>
                 <span id="dropper3-cost">$1,200</span>
             </button>
-
             <button id="dropper4-btn" onclick="buyAsset('dropper4')">
                 <span>🔮 Cyber Matrix (<span id="d4-inc"></span>/s)</span>
                 <span id="dropper4-cost">$12,500</span>
             </button>
-
             <button id="dropper5-btn" onclick="buyAsset('dropper5')">
                 <span>🧬 Antimatter Forge (<span id="d5-inc"></span>/s)</span>
                 <span id="dropper5-cost">$140,000</span>
             </button>
-
             <button id="dropper6-btn" onclick="buyAsset('dropper6')">
                 <span>👑 Singularity Engine (<span id="d6-inc"></span>/s)</span>
                 <span id="dropper6-cost">$1,500,000</span>
             </button>
 
-            <!-- Prestige Reset Section -->
-            <div class="section-title">Prestige Reset</div>
+            <!-- Rebirth Framework -->
+            <div class="section-title">Quantum Horizon Reset</div>
             <button id="rebirth-btn" class="rebirth-btn" onclick="triggerRebirth()">
-                <span>✨ Rebirth (Requires $<span id="rebirth-cost-display">10,000,000</span>)</span>
+                <span>✨ Force Rebirth (Requires $<span id="rebirth-cost-display">10,000,000</span>)</span>
             </button>
 
             <center>
-                <button class="danger-btn" onclick="resetGame()">Wipe Save Profile</button>
+                <button class="danger-btn" onclick="resetGame()">Purge Storage Metadata</button>
             </center>
         </div>
 
-        <!-- Pinned Bottom Panel: Stays visible 100% of the time, no matter what -->
+        <!-- Fixed Footer Branding Anchor -->
         <div class="fixed-footer">
             Made By <span>Yhonatan Akiva</span>
         </div>
@@ -247,40 +351,74 @@
     </div>
 
     <script>
-        // Game configuration objects
         const dropperConfigs = {
-            dropper1: { baseCost: 15, incomeVal: 1, scale: 1.35 },
-            dropper2: { baseCost: 150, incomeVal: 8, scale: 1.38 },
-            dropper3: { baseCost: 1200, incomeVal: 70, scale: 1.4 },
-            dropper4: { baseCost: 12500, incomeVal: 620, scale: 1.42 },
-            dropper5: { baseCost: 140000, incomeVal: 5300, scale: 1.45 },
-            dropper6: { baseCost: 1500000, incomeVal: 48000, scale: 1.5 }
+            dropper1: { baseCost: 15, incomeVal: 1, scale: 1.32 },
+            dropper2: { baseCost: 150, incomeVal: 8, scale: 1.34 },
+            dropper3: { baseCost: 1200, incomeVal: 70, scale: 1.36 },
+            dropper4: { baseCost: 12500, incomeVal: 620, scale: 1.38 },
+            dropper5: { baseCost: 140000, incomeVal: 5300, scale: 1.4 },
+            dropper6: { baseCost: 1500000, incomeVal: 48000, scale: 1.42 }
         };
 
         const clickConfigs = {
-            click1: { baseCost: 25, addVal: 2, scale: 1.4 },
-            click2: { baseCost: 200, addVal: 15, scale: 1.45 },
-            click3: { baseCost: 1500, addVal: 110, scale: 1.5 },
-            click4: { baseCost: 12000, addVal: 850, scale: 1.55 },
-            click5: { baseCost: 95000, addVal: 6500, scale: 1.6 }
+            click1: { baseCost: 25, addVal: 2, scale: 1.38 },
+            click2: { baseCost: 200, addVal: 15, scale: 1.42 },
+            click3: { baseCost: 1500, addVal: 110, scale: 1.46 },
+            click4: { baseCost: 12000, addVal: 850, scale: 1.5 },
+            click5: { baseCost: 95000, addVal: 6500, scale: 1.54 }
         };
 
-        // Reactive Application State
+        // Complete Game Engine Profile Vector
         let gameData = {
             cash: 0,
             income: 0,
             rebirths: 0,
+            level: 1,
+            xp: 0,
+            achievements: [false, false, false, false],
             clicksOwned: { click1: 0, click2: 0, click3: 0, click4: 0, click5: 0 },
             owned: { dropper1: 0, dropper2: 0, dropper3: 0, dropper4: 0, dropper5: 0, dropper6: 0 }
         };
 
-        // Calculations & Scaling logic
+        // Active State flags
+        let activeFrenzyMode = false;
+        let frenzyTimerWindow = 0;
+
+        function getXpNeeded() { return gameData.level * 120; }
+
+        function addXp(amount) {
+            gameData.xp += amount;
+            let needed = getXpNeeded();
+            if (gameData.xp >= needed) {
+                gameData.xp -= needed;
+                gameData.level++;
+                
+                // Grant structural cash payload on level up
+                let lvlBonus = gameData.level * 250 * getRebirthMultiplier();
+                gameData.cash += lvlBonus;
+                alert(`🎉 Level Up! You advanced to Level ${gameData.level} and gained a bonus of $${Math.floor(lvlBonus).toLocaleString()}!`);
+            }
+            updateXpBar();
+        }
+
+        function updateXpBar() {
+            let percentage = (gameData.xp / getXpNeeded()) * 100;
+            document.getElementById('xp-fill').style.width = `${Math.min(percentage, 100)}%`;
+            document.getElementById('lvl-display').innerText = gameData.level;
+        }
+
+        function getAchievementMultiplier() {
+            let totalUnlocked = 0;
+            gameData.achievements.forEach(ach => { if(ach) totalUnlocked++; });
+            return 1 + (totalUnlocked * 0.25); // Each unlocked achievement adds a +25% speed bonus
+        }
+
         function getRebirthMultiplier() {
-            return 1 + (gameData.rebirths * 1.5); // +150% boost per Rebirth
+            return (1 + (gameData.rebirths * 1.5)) * getAchievementMultiplier();
         }
 
         function getRebirthCost() {
-            return Math.floor(10000000 * Math.pow(4, gameData.rebirths));
+            return Math.floor(10000000 * Math.pow(5, gameData.rebirths));
         }
 
         function getClickPower() {
@@ -288,8 +426,8 @@
             for(let key in clickConfigs) {
                 baseClick += gameData.clicksOwned[key] * clickConfigs[key].addVal;
             }
-            // Dynamic bonus: Clicking gets a passive structural bonus equal to 5% of automatic income values!
-            return baseClick + Math.floor(gameData.income * 0.05); 
+            let activePower = baseClick + Math.floor(gameData.income * 0.04); 
+            return activeFrenzyMode ? activePower * 5 : activePower;
         }
 
         function getClickCost(type) {
@@ -307,29 +445,48 @@
             for (let key in dropperConfigs) {
                 baseTotal += gameData.owned[key] * dropperConfigs[key].incomeVal;
             }
-            gameData.income = baseTotal * getRebirthMultiplier();
+            let calculated = baseTotal * getRebirthMultiplier();
+            gameData.income = activeFrenzyMode ? calculated * 5 : calculated;
         }
 
-        // Interface synchronization
-        function updateUI() {
-            let mult = getRebirthMultiplier();
+        function checkAchievements() {
+            // Achievement 0: Reach $10,000 cash
+            if (!gameData.achievements[0] && gameData.cash >= 10000) gameData.achievements[0] = true;
             
+            // Achievement 1: Own 10 total droppers
+            let totalDroppers = 0;
+            for(let key in gameData.owned) { totalDroppers += gameData.owned[key]; }
+            if (!gameData.achievements[1] && totalDroppers >= 10) gameData.achievements[1] = true;
+            
+            // Achievement 2: Hit Level 5
+            if (!gameData.achievements[2] && gameData.level >= 5) gameData.achievements[2] = true;
+            
+            // Achievement 3: Rebirth at least once
+            if (!gameData.achievements[3] && gameData.rebirths > 0) gameData.achievements[3] = true;
+
+            // Reflect state adjustments onto badge styles
+            gameData.achievements.forEach((unlocked, index) => {
+                let badge = document.getElementById(`ach${index}`);
+                if (unlocked && badge) badge.classList.add('unlocked');
+            });
+        }
+
+        function updateUI() {
             document.getElementById('cash-display').innerText = Math.floor(gameData.cash).toLocaleString();
             document.getElementById('income-display').innerText = Math.floor(gameData.income).toLocaleString();
-            document.getElementById('multiplier-display').innerText = mult.toFixed(1);
-            document.getElementById('click-val-display').innerText = getClickPower().toLocaleString();
+            document.getElementById('multiplier-display').innerText = getRebirthMultiplier().toFixed(2);
+            document.getElementById('click-val-display').innerText = Math.floor(getClickPower()).toLocaleString();
 
-            // Click Upgrades processing
             for(let key in clickConfigs) {
                 let currentCost = getClickCost(key);
                 document.getElementById(`${key}-cost`).innerText = `$${currentCost.toLocaleString()}`;
                 document.getElementById(`${key}-btn`).disabled = gameData.cash < currentCost;
             }
 
-            // Automatics Processing
             for (let key in dropperConfigs) {
                 let currentCost = getDropperCost(key);
-                let displayedIncome = Math.floor(dropperConfigs[key].incomeVal * mult);
+                let displayedIncome = Math.floor(dropperConfigs[key].incomeVal * getRebirthMultiplier());
+                if (activeFrenzyMode) displayedIncome *= 5;
                 
                 document.getElementById(`${key}-cost`).innerText = `$${currentCost.toLocaleString()}`;
                 
@@ -339,16 +496,38 @@
                 document.getElementById(`${key}-btn`).disabled = gameData.cash < currentCost;
             }
 
-            // Rebirth updates
             let rCost = getRebirthCost();
             document.getElementById('rebirth-cost-display').innerText = rCost.toLocaleString();
             document.getElementById('rebirth-btn').disabled = gameData.cash < rCost;
+            
+            checkAchievements();
         }
 
-        // Click actions
         function clickGain() {
             gameData.cash += getClickPower();
+            addXp(4);
+            
+            // Randomly trigger an Overdrive opportunity (2% chance per click when offline)
+            if(!activeFrenzyMode && Math.random() < 0.02) {
+                document.getElementById('frenzy-trigger').style.display = 'flex';
+            }
             updateUI();
+        }
+
+        function startFrenzy() {
+            document.getElementById('frenzy-trigger').style.display = 'none';
+            activeFrenzyMode = true;
+            document.getElementById('frenzy-overlay').style.opacity = '1';
+            recalculateIncome();
+            updateUI();
+            
+            // Run Frenzy loop countdown for 5 seconds
+            setTimeout(() => {
+                activeFrenzyMode = false;
+                document.getElementById('frenzy-overlay').style.opacity = '0';
+                recalculateIncome();
+                updateUI();
+            }, 5000);
         }
 
         function buyClickUpgrade(type) {
@@ -356,6 +535,7 @@
             if (gameData.cash >= cost) {
                 gameData.cash -= cost;
                 gameData.clicksOwned[type]++;
+                addXp(15);
                 updateUI();
                 saveGame();
             }
@@ -366,6 +546,7 @@
             if (gameData.cash >= cost) {
                 gameData.cash -= cost;
                 gameData.owned[type]++;
+                addXp(25);
                 recalculateIncome();
                 updateUI();
                 saveGame();
@@ -377,48 +558,53 @@
             if (gameData.cash >= cost) {
                 gameData.cash = 0;
                 gameData.rebirths++;
+                gameData.level = 1;
+                gameData.xp = 0;
                 
-                // Reset standard upgrades on rebirth
                 for (let key in gameData.owned) gameData.owned[key] = 0;
                 for (let key in gameData.clicksOwned) gameData.clicksOwned[key] = 0;
                 
                 recalculateIncome();
+                updateXpBar();
                 updateUI();
                 saveGame();
-                alert("✨ Rebirth successful! Yield multipliers have broken limits!");
+                alert("✨ Horizon Crossed! Your income mechanics have evolved to the next dimensional scalar tier!");
             }
         }
 
-        // Storage operations
         function saveGame() {
-            localStorage.setItem('neon_tycoon_v3_save', JSON.stringify(gameData));
+            localStorage.setItem('cyber_tycoon_v3_save', JSON.stringify(gameData));
         }
 
         function loadGame() {
-            let saved = localStorage.getItem('neon_tycoon_v3_save');
+            let saved = localStorage.getItem('cyber_tycoon_v3_save');
             if (saved) {
                 try {
                     let parsed = JSON.parse(saved);
                     if (typeof parsed.cash === 'number') gameData.cash = parsed.cash;
                     if (typeof parsed.rebirths === 'number') gameData.rebirths = parsed.rebirths;
+                    if (typeof parsed.level === 'number') gameData.level = parsed.level;
+                    if (typeof parsed.xp === 'number') gameData.xp = parsed.xp;
+                    if (parsed.achievements) gameData.achievements = parsed.achievements;
                     if (parsed.owned) gameData.owned = { ...gameData.owned, ...parsed.owned };
                     if (parsed.clicksOwned) gameData.clicksOwned = { ...gameData.clicksOwned, ...parsed.clicksOwned };
-                    recalculateIncome();
                 } catch(e) {
-                    console.error("Save load engine breakdown.", e);
+                    console.error("Save system corruption rollback.", e);
                 }
             }
+            recalculateIncome();
+            updateXpBar();
             updateUI();
         }
 
         function resetGame() {
-            if (confirm("Reset everything permanently? You will lose all stats.")) {
-                localStorage.removeItem('neon_tycoon_v3_save');
+            if (confirm("Reset everything permanently? You will lose all achievements and stats.")) {
+                localStorage.removeItem('cyber_tycoon_v3_save');
                 location.reload();
             }
         }
 
-        // App Loops setup
+        // Core 100ms calculation loop tick
         setInterval(function() {
             gameData.cash += (gameData.income / 10);
             updateUI();
