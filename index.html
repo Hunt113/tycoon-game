@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- 📲 MOBILE ZOOM FIX: prevents mobile screens from zooming on fast double-taps -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Cyber Tycoon 4.0: Cosmic Edition</title>
     <style>
@@ -267,7 +266,7 @@
         .scrollable-content {
             flex: 1;
             overflow-y: auto;
-            padding: 15px 25px 25px 25px; /* Added extra padding to the bottom since footer is gone */
+            padding: 15px 25px 25px 25px; 
             box-sizing: border-box;
         }
 
@@ -395,7 +394,6 @@
 </head>
 <body>
 
-    <!-- Space Loading Overlay Container Block -->
     <div id="loading-screen">
         <div class="space-background"></div>
         <div class="loading-container">
@@ -408,7 +406,6 @@
         </div>
     </div>
 
-    <!-- Main Game Window Frame -->
     <div class="app-window">
         <div class="header-panel">
             <div class="title-row">
@@ -489,7 +486,6 @@
                 <input type="checkbox" id="motion-toggle" style="transform: scale(1.3);" onchange="toggleMotion(this.checked)">
             </div>
 
-            <!-- 👑 INTEGRATED DEVELOPER CREDIT INSIDE SETTINGS MENU -->
             <div class="section-title">System Architecture Credits</div>
             <div class="settings-credit-block">
                 <p class="settings-credit-lbl">Principal Software Developer</p>
@@ -765,6 +761,7 @@
             document.getElementById('settings-modal').style.display = open ? 'flex' : 'none';
         }
 
+        // Modifies layout preset visuals
         function changeTheme(themeName) {
             document.documentElement.setAttribute('data-theme', themeName);
             gameData.settings.theme = themeName;
