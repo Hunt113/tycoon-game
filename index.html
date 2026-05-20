@@ -91,6 +91,21 @@
             font-size: 0.85rem; padding: 6px; margin-top: 25px; justify-content: center; width: auto; display: inline-flex;
         }
         .danger-btn:hover { background: #3d1418; }
+
+        /* Branding Footer Styling */
+        .credits-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px dashed #29292e;
+            color: #8f8f98;
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .credits-footer span {
+            color: #00ff88;
+            text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -168,10 +183,14 @@
         <div>
             <button class="danger-btn" onclick="resetGame()">Wipe Save Profile</button>
         </div>
+
+        <!-- Custom Player Branding -->
+        <div class="credits-footer">
+            Made By <span>Yhonatan Akiva</span>
+        </div>
     </div>
 
     <script>
-        // Static configuration rules
         const baseConfigs = {
             dropper1: { baseCost: 15, incomeVal: 1, scale: 1.35 },
             dropper2: { baseCost: 150, incomeVal: 8, scale: 1.38 },
@@ -181,7 +200,6 @@
             dropper6: { baseCost: 1500000, incomeVal: 48000, scale: 1.5 }
         };
 
-        // Core Game Variables
         let gameData = {
             cash: 0,
             income: 0,
@@ -190,18 +208,16 @@
             owned: { dropper1: 0, dropper2: 0, dropper3: 0, dropper4: 0, dropper5: 0, dropper6: 0 }
         };
 
-        // Calculations
         function getRebirthMultiplier() {
-            return 1 + (gameData.rebirths * 1.5); // Each rebirth gives +150% overall income boost
+            return 1 + (gameData.rebirths * 1.5);
         }
 
         function getRebirthCost() {
-            return Math.floor(10000000 * Math.pow(4, gameData.rebirths)); // Cost increases x4 each time
+            return Math.floor(10000000 * Math.pow(4, gameData.rebirths));
         }
 
         function getClickPower() {
             return 1 + (gameData.clickPowerLevel * 2) + Math.floor(gameData.income * 0.05); 
-            // Clicks scale manually + automatically take 5% of your total automatic income capacity!
         }
 
         function getClickUpgradeCost() {
@@ -221,42 +237,35 @@
             gameData.income = baseTotal * getRebirthMultiplier();
         }
 
-        // UI Core Synchronization 
         function updateUI() {
             let mult = getRebirthMultiplier();
             
-            // Raw values update
             document.getElementById('cash-display').innerText = Math.floor(gameData.cash).toLocaleString();
             document.getElementById('income-display').innerText = Math.floor(gameData.income).toLocaleString();
             document.getElementById('multiplier-display').innerText = mult.toFixed(1);
             document.getElementById('click-val-display').innerText = getClickPower().toLocaleString();
 
-            // Click Upgrades handling
             let cCost = getClickUpgradeCost();
             document.getElementById('clickUpgrade-cost').innerText = `$${cCost.toLocaleString()}`;
             document.getElementById('clickUpgrade-btn').disabled = gameData.cash < cCost;
 
-            // Dropper UI updates
             for (let key in baseConfigs) {
                 let currentCost = getCost(key);
                 let displayedIncome = Math.floor(baseConfigs[key].incomeVal * mult);
                 
                 document.getElementById(`${key}-cost`).innerText = `$${currentCost.toLocaleString()}`;
                 
-                // Track dynamic sub label changes inside labels
                 let shorthand = key === 'dropper1' ? 'd1' : key === 'dropper2' ? 'd2' : key === 'dropper3' ? 'd3' : key === 'dropper4' ? 'd4' : key === 'dropper5' ? 'd5' : 'd6';
                 document.getElementById(`${shorthand}-inc`).innerText = `+${displayedIncome.toLocaleString()}`;
                 
                 document.getElementById(`${key}-btn`).disabled = gameData.cash < currentCost;
             }
 
-            // Rebirth constraints handling
             let rCost = getRebirthCost();
             document.getElementById('rebirth-cost-display').innerText = rCost.toLocaleString();
             document.getElementById('rebirth-btn').disabled = gameData.cash < rCost;
         }
 
-        // Gameplay Interaction Execution 
         function clickGain() {
             gameData.cash += getClickPower();
             updateUI();
@@ -290,7 +299,6 @@
                 gameData.clickPowerLevel = 0;
                 gameData.rebirths++;
                 
-                // Clear out physical progression assets
                 for (let key in gameData.owned) {
                     gameData.owned[key] = 0;
                 }
@@ -302,7 +310,6 @@
             }
         }
 
-        // Save Profiles Management
         function saveGame() {
             localStorage.setItem('neon_tycoon_v2_save', JSON.stringify(gameData));
         }
@@ -331,7 +338,6 @@
             }
         }
 
-        // Thread Interval Executions
         setInterval(function() {
             gameData.cash += (gameData.income / 10);
             updateUI();
