@@ -267,7 +267,7 @@
         .scrollable-content {
             flex: 1;
             overflow-y: auto;
-            padding: 15px 25px;
+            padding: 15px 25px 25px 25px; /* Added extra padding to the bottom since footer is gone */
             box-sizing: border-box;
         }
 
@@ -363,21 +363,6 @@
         }
         .setting-item select:focus { outline: 1px solid var(--accent-green); }
         .toggle-row { display: flex; justify-content: space-between; align-items: center; }
-
-        /* 👑 STYLING FOR CREATOR CREDITS */
-        .fixed-footer {
-            background: var(--bg-box);
-            padding: 16px 0;
-            border-top: 2px solid var(--border-color);
-            color: #ffffff;
-            font-size: 1.25rem;
-            font-weight: bold;
-            letter-spacing: 0.8px;
-            text-align: center;
-            width: 100%;
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
-        }
-        .fixed-footer span { color: var(--accent-green); }
 
         .settings-credit-block {
             background: var(--bg-box);
@@ -522,9 +507,6 @@
                 <button class="danger-btn" onclick="resetGame()">Factory Reset Database (Wipe Profile)</button>
             </center>
         </div>
-
-        <!-- 👑 AMPLIFIED DEVELOPER LOGO ON MAIN WINDOW SURFACE -->
-        <div class="fixed-footer">Made By <span>Yhonatan Akiva</span></div>
     </div>
 
     <script>
