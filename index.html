@@ -3,47 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Web Tycoon</title>
+    <title>Mega Multi-Stage Tycoon</title>
     <style>
-        /* Modern, clean Dark Theme styling */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #121214; 
+            background: #0f0f12; 
             color: #e1e1e6; 
             text-align: center; 
             padding: 20px; 
             margin: 0;
         }
         .container { 
-            max-width: 480px; 
-            margin: 40px auto; 
-            background: #202024; 
-            padding: 30px; 
+            max-width: 550px; 
+            margin: 20px auto; 
+            background: #19191c; 
+            padding: 25px; 
             border-radius: 16px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.7); 
             border: 1px solid #29292e;
         }
-        h1 { color: #00ff88; font-size: 2.6rem; margin: 0 0 10px 0; }
-        p { color: #8f8f98; margin: 0 0 20px 0; }
-        .stat-box {
-            background: #121214;
-            padding: 15px;
-            border-radius: 12px;
+        h1 { color: #00ff88; font-size: 2.4rem; margin: 0 0 5px 0; }
+        .tagline { color: #8f8f98; margin: 0 0 20px 0; font-size: 0.95rem; }
+        
+        /* Dashboard Display Layout */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             margin-bottom: 20px;
         }
-        .stat { font-size: 2.2rem; font-weight: bold; color: #ffffff; }
-        .sub-stat { font-size: 1.1rem; color: #00ff88; margin-top: 5px; }
+        .stat-box {
+            background: #121214;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #222226;
+        }
+        .stat-box.full { grid-column: span 2; }
+        .stat { font-size: 2rem; font-weight: bold; color: #ffffff; }
+        .stat-lbl { font-size: 0.8rem; color: #8f8f98; text-transform: uppercase; letter-spacing: 1px; }
+        .sub-stat { font-size: 1rem; color: #00ff88; font-weight: bold; }
+        .rebirth-stat { color: #a33eff; font-size: 1.3rem; font-weight: bold; }
+
+        /* Action Buttons */
         button { 
             background: #00ff88; 
             color: #121214; 
             border: none; 
-            padding: 15px; 
-            font-size: 1.1rem; 
+            padding: 14px; 
+            font-size: 1rem; 
             font-weight: bold; 
             border-radius: 8px; 
             cursor: pointer; 
-            transition: all 0.2s ease; 
-            margin: 8px 0; 
+            transition: all 0.15s ease; 
+            margin: 6px 0; 
             width: 100%; 
             display: flex;
             justify-content: space-between;
@@ -51,116 +63,213 @@
         }
         button:hover:not(:disabled) { 
             background: #00cc76; 
-            transform: translateY(-2px); 
+            transform: translateY(-1px); 
         }
-        button:active:not(:disabled) { transform: translateY(0); }
         button:disabled { 
-            background: #29292e; 
-            color: #7c7c8a; 
+            background: #222226; 
+            color: #575761; 
             cursor: not-allowed; 
         }
-        .upgrade-section { 
-            border-top: 2px solid #29292e; 
-            margin-top: 25px; 
-            padding-top: 15px; 
+        
+        .click-btn { background: #ffffff; color: #121214; justify-content: center; font-size: 1.1rem; }
+        .click-btn:hover:not(:disabled) { background: #e1e1e6; }
+        
+        .rebirth-btn { background: #a33eff; color: white; justify-content: center; font-size: 1.1rem; margin-top: 15px;}
+        .rebirth-btn:hover:not(:disabled) { background: #882ec7; }
+
+        .section-title { 
+            margin: 20px 0 10px 0; 
+            color: #a8a8b3; 
+            text-align: left; 
+            font-size: 1.1rem;
+            border-bottom: 1px solid #29292e;
+            padding-bottom: 5px;
         }
-        .upgrade-section h3 { margin-bottom: 15px; color: #a8a8b3; text-align: left; }
+        
         .danger-btn {
-            background: #ff3344;
-            color: white;
-            font-size: 0.9rem;
-            padding: 8px;
-            margin-top: 20px;
-            justify-content: center;
+            background: transparent; color: #ff3344; border: 1px solid #3d1418;
+            font-size: 0.85rem; padding: 6px; margin-top: 25px; justify-content: center; width: auto; display: inline-flex;
         }
-        .danger-btn:hover { background: #d92231; }
+        .danger-btn:hover { background: #3d1418; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Neon Tycoon</h1>
-        <p>Your web-based incremental empire</p>
+        <h1>Neon Tycoon 2.0</h1>
+        <div class="tagline">Now with Click Upgrades & Rebirth Multipliers</div>
         
-        <div class="stat-box">
-            <div class="stat">$<span id="cash-display">0</span></div>
-            <div class="sub-stat">+$<span id="income-display">0</span> / sec</div>
+        <!-- Stats Dashboard -->
+        <div class="dashboard">
+            <div class="stat-box full">
+                <div class="stat">$<span id="cash-display">0</span></div>
+                <div class="stat-lbl">Available Cash</div>
+            </div>
+            <div class="stat-box">
+                <div class="sub-stat">+$<span id="income-display">0</span>/s</div>
+                <div class="stat-lbl">Auto Income</div>
+            </div>
+            <div class="stat-box">
+                <div class="rebirth-stat">x<span id="multiplier-display">1</span></div>
+                <div class="stat-lbl">Rebirth Multiplier</div>
+            </div>
         </div>
 
-        <!-- Manual clicker button -->
-        <button onclick="clickGain()" style="justify-content: center; background: #ffffff; color: #121214;">
-            ⚡ Click for Cash (+$1)
+        <!-- Manual Core Interaction -->
+        <button class="click-btn" onclick="clickGain()">
+            ⚡ Click to Earn (+$<span id="click-val-display">1</span>)
         </button>
 
-        <!-- Upgrades Section -->
-        <div class="upgrade-section">
-            <h3>Buy Production Droppers</h3>
-            
-            <button id="dropper1-btn" onclick="buyAsset('dropper1', 15, 1, 1.4)">
-                <span>🏗️ Basic Dropper (+1/s)</span>
-                <span id="dropper1-cost">$15</span>
-            </button>
-            
-            <button id="dropper2-btn" onclick="buyAsset('dropper2', 120, 10, 1.5)">
-                <span>🚀 Plasma Dropper (+10/s)</span>
-                <span id="dropper2-cost">$120</span>
-            </button>
+        <!-- Upgrades Categories -->
+        <div class="section-title">Manual Click Upgrades</div>
+        <button id="clickUpgrade-btn" onclick="buyClickUpgrade()">
+            <span>👆 Training Manual (Increase Click Power)</span>
+            <span id="clickUpgrade-cost">$25</span>
+        </button>
 
-            <button id="dropper3-btn" onclick="buyAsset('dropper3', 1000, 95, 1.6)">
-                <span>🌌 Quantum Core (+95/s)</span>
-                <span id="dropper3-cost">$1,000</span>
-            </button>
+        <div class="section-title">Automatic Industrial Droppers</div>
+        
+        <button id="dropper1-btn" onclick="buyAsset('dropper1')">
+            <span>🏗️ Basic Dropper (<span id="d1-inc"></span>/s)</span>
+            <span id="dropper1-cost">$15</span>
+        </button>
+        
+        <button id="dropper2-btn" onclick="buyAsset('dropper2')">
+            <span>🚀 Plasma Dropper (<span id="d2-inc"></span>/s)</span>
+            <span id="dropper2-cost">$150</span>
+        </button>
+
+        <button id="dropper3-btn" onclick="buyAsset('dropper3')">
+            <span>🌌 Quantum Core (<span id="d3-inc"></span>/s)</span>
+            <span id="dropper3-cost">$1,200</span>
+        </button>
+
+        <button id="dropper4-btn" onclick="buyAsset('dropper4')">
+            <span>🔮 Cyber Matrix (<span id="d4-inc"></span>/s)</span>
+            <span id="dropper4-cost">$12,500</span>
+        </button>
+
+        <button id="dropper5-btn" onclick="buyAsset('dropper5')">
+            <span>🧬 Antimatter Forge (<span id="d5-inc"></span>/s)</span>
+            <span id="dropper5-cost">$140,000</span>
+        </button>
+
+        <button id="dropper6-btn" onclick="buyAsset('dropper6')">
+            <span>👑 Singularity Engine (<span id="d6-inc"></span>/s)</span>
+            <span id="dropper6-cost">$1,500,000</span>
+        </button>
+
+        <!-- Prestige Tier -->
+        <div class="section-title">Prestige Reset</div>
+        <button id="rebirth-btn" class="rebirth-btn" onclick="triggerRebirth()">
+            <span>✨ Rebirth (Requires $<span id="rebirth-cost-display">10,000,000</span>)</span>
+        </button>
+
+        <div>
+            <button class="danger-btn" onclick="resetGame()">Wipe Save Profile</button>
         </div>
-
-        <button class="danger-btn" onclick="resetGame()">⚠️ Reset Entire Tycoon</button>
     </div>
 
     <script>
-        // Default Game Configuration and Base Costs
+        // Static configuration rules
         const baseConfigs = {
-            dropper1: { baseCost: 15, incomeVal: 1, scale: 1.4 },
-            dropper2: { baseCost: 120, incomeVal: 10, scale: 1.5 },
-            dropper3: { baseCost: 1000, incomeVal: 95, scale: 1.6 }
+            dropper1: { baseCost: 15, incomeVal: 1, scale: 1.35 },
+            dropper2: { baseCost: 150, incomeVal: 8, scale: 1.38 },
+            dropper3: { baseCost: 1200, incomeVal: 70, scale: 1.4 },
+            dropper4: { baseCost: 12500, incomeVal: 620, scale: 1.42 },
+            dropper5: { baseCost: 140000, incomeVal: 5300, scale: 1.45 },
+            dropper6: { baseCost: 1500000, incomeVal: 48000, scale: 1.5 }
         };
 
-        // Live Dynamic State variables
+        // Core Game Variables
         let gameData = {
             cash: 0,
             income: 0,
-            owned: { dropper1: 0, dropper2: 0, dropper3: 0 }
+            clickPowerLevel: 0,
+            rebirths: 0,
+            owned: { dropper1: 0, dropper2: 0, dropper3: 0, dropper4: 0, dropper5: 0, dropper6: 0 }
         };
 
-        // Helper: Calculate upgrade cost based on how many you already own
+        // Calculations
+        function getRebirthMultiplier() {
+            return 1 + (gameData.rebirths * 1.5); // Each rebirth gives +150% overall income boost
+        }
+
+        function getRebirthCost() {
+            return Math.floor(10000000 * Math.pow(4, gameData.rebirths)); // Cost increases x4 each time
+        }
+
+        function getClickPower() {
+            return 1 + (gameData.clickPowerLevel * 2) + Math.floor(gameData.income * 0.05); 
+            // Clicks scale manually + automatically take 5% of your total automatic income capacity!
+        }
+
+        function getClickUpgradeCost() {
+            return Math.floor(25 * Math.pow(1.6, gameData.clickPowerLevel));
+        }
+
         function getCost(type) {
             let conf = baseConfigs[type];
-            let count = gameData.owned[type];
-            return Math.floor(conf.baseCost * Math.pow(conf.scale, count));
+            return Math.floor(conf.baseCost * Math.pow(conf.scale, gameData.owned[type]));
         }
 
-        // Helper: Recalculate the overall cash generation per second
         function recalculateIncome() {
-            let total = 0;
+            let baseTotal = 0;
             for (let key in baseConfigs) {
-                total += gameData.owned[key] * baseConfigs[key].incomeVal;
+                baseTotal += gameData.owned[key] * baseConfigs[key].incomeVal;
             }
-            gameData.income = total;
+            gameData.income = baseTotal * getRebirthMultiplier();
         }
 
+        // UI Core Synchronization 
         function updateUI() {
+            let mult = getRebirthMultiplier();
+            
+            // Raw values update
             document.getElementById('cash-display').innerText = Math.floor(gameData.cash).toLocaleString();
-            document.getElementById('income-display').innerText = gameData.income.toLocaleString();
+            document.getElementById('income-display').innerText = Math.floor(gameData.income).toLocaleString();
+            document.getElementById('multiplier-display').innerText = mult.toFixed(1);
+            document.getElementById('click-val-display').innerText = getClickPower().toLocaleString();
 
-            // Handle price tracking and disabling mechanics dynamically
+            // Click Upgrades handling
+            let cCost = getClickUpgradeCost();
+            document.getElementById('clickUpgrade-cost').innerText = `$${cCost.toLocaleString()}`;
+            document.getElementById('clickUpgrade-btn').disabled = gameData.cash < cCost;
+
+            // Dropper UI updates
             for (let key in baseConfigs) {
                 let currentCost = getCost(key);
+                let displayedIncome = Math.floor(baseConfigs[key].incomeVal * mult);
+                
                 document.getElementById(`${key}-cost`).innerText = `$${currentCost.toLocaleString()}`;
+                
+                // Track dynamic sub label changes inside labels
+                let shorthand = key === 'dropper1' ? 'd1' : key === 'dropper2' ? 'd2' : key === 'dropper3' ? 'd3' : key === 'dropper4' ? 'd4' : key === 'dropper5' ? 'd5' : 'd6';
+                document.getElementById(`${shorthand}-inc`).innerText = `+${displayedIncome.toLocaleString()}`;
+                
                 document.getElementById(`${key}-btn`).disabled = gameData.cash < currentCost;
             }
+
+            // Rebirth constraints handling
+            let rCost = getRebirthCost();
+            document.getElementById('rebirth-cost-display').innerText = rCost.toLocaleString();
+            document.getElementById('rebirth-btn').disabled = gameData.cash < rCost;
         }
 
+        // Gameplay Interaction Execution 
         function clickGain() {
-            gameData.cash += 1;
+            gameData.cash += getClickPower();
             updateUI();
+        }
+
+        function buyClickUpgrade() {
+            let cost = getClickUpgradeCost();
+            if (gameData.cash >= cost) {
+                gameData.cash -= cost;
+                gameData.clickPowerLevel++;
+                updateUI();
+                saveGame();
+            }
         }
 
         function buyAsset(type) {
@@ -174,46 +283,61 @@
             }
         }
 
-        // --- Save System Logic ---
+        function triggerRebirth() {
+            let cost = getRebirthCost();
+            if (gameData.cash >= cost) {
+                gameData.cash = 0;
+                gameData.clickPowerLevel = 0;
+                gameData.rebirths++;
+                
+                // Clear out physical progression assets
+                for (let key in gameData.owned) {
+                    gameData.owned[key] = 0;
+                }
+                
+                recalculateIncome();
+                updateUI();
+                saveGame();
+                alert("✨ Rebirth successful! Your production yields have sky-rocketed!");
+            }
+        }
+
+        // Save Profiles Management
         function saveGame() {
-            localStorage.setItem('neon_tycoon_save', JSON.stringify(gameData));
+            localStorage.setItem('neon_tycoon_v2_save', JSON.stringify(gameData));
         }
 
         function loadGame() {
-            let saved = localStorage.getItem('neon_tycoon_save');
+            let saved = localStorage.getItem('neon_tycoon_v2_save');
             if (saved) {
                 try {
                     let parsed = JSON.parse(saved);
-                    // Standard structural sanity checks
                     if (typeof parsed.cash === 'number') gameData.cash = parsed.cash;
+                    if (typeof parsed.clickPowerLevel === 'number') gameData.clickPowerLevel = parsed.clickPowerLevel;
+                    if (typeof parsed.rebirths === 'number') gameData.rebirths = parsed.rebirths;
                     if (parsed.owned) gameData.owned = { ...gameData.owned, ...parsed.owned };
                     recalculateIncome();
                 } catch(e) {
-                    console.error("Save corrupted, loading defaults", e);
+                    console.error("Save state parsing failure.", e);
                 }
             }
             updateUI();
         }
 
         function resetGame() {
-            if (confirm("Are you sure you want to completely clear your save?")) {
-                localStorage.removeItem('neon_tycoon_save');
-                gameData = { cash: 0, income: 0, owned: { dropper1: 0, dropper2: 0, dropper3: 0 } };
-                updateUI();
+            if (confirm("Reset everything permanently? You will lose all multipliers.")) {
+                localStorage.removeItem('neon_tycoon_v2_save');
+                location.reload();
             }
         }
 
-        // --- Main Intervals ---
-        // Run game loop math updates every 100 milliseconds (0.1s)
+        // Thread Interval Executions
         setInterval(function() {
             gameData.cash += (gameData.income / 10);
             updateUI();
         }, 100);
 
-        // Autosave system running behind the scenes every 15 seconds
         setInterval(saveGame, 15000);
-
-        // Run loading setup when webpage opens
         window.onload = loadGame;
     </script>
 </body>
