@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- 📲 MOBILE ZOOM FIX: maximum-scale and user-scalable=no prevent the screen from zooming on fast double-taps -->
+    <!-- 📲 MOBILE ZOOM FIX: prevents mobile screens from zooming on fast double-taps -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cyber Tycoon 4.0: Settings & Mobile Fix</title>
+    <title>Cyber Tycoon 4.0: Cosmic Edition</title>
     <style>
         /* CSS Variables to handle Themes dynamically */
         :root {
@@ -19,7 +19,7 @@
             --accent-glow: rgba(0, 255, 136, 0.3);
             --btn-disabled: #1a1a24;
             --btn-disabled-text: #4e4e5e;
-            --btn-hover-glow: rgba(0,255,136,0.3);
+            --btn-hover-glow: rgba(0, 255, 136, 0.3);
         }
 
         /* Light Theme Values */
@@ -77,6 +77,97 @@
             transition: background 0.3s ease;
         }
 
+        /* 🚀 COSMIC SPACE LOADING OVERLAY */
+        #loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #030308;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            overflow: hidden;
+        }
+
+        /* Floating Stars Canvas Area */
+        .space-background {
+            position: absolute;
+            width: 200%; height: 200%;
+            background-image: 
+                radial-gradient(1px 1px at 25px 35px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 60px 120px, #00f0ff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 150px 80px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 250px 300px, #a33eff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 350px 200px, #fff, rgba(0,0,0,0));
+            background-size: 400px 400px;
+            animation: spaceDrift 40s linear infinite;
+            opacity: 0.6;
+            z-index: 1;
+        }
+
+        @keyframes spaceDrift {
+            from { transform: translate(0, 0); }
+            to { transform: translate(-100px, -100px); }
+        }
+
+        .loading-container {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 85%;
+            max-width: 380px;
+        }
+
+        .loading-logo {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #00f0ff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+
+        .loading-subtext {
+            font-size: 0.8rem;
+            color: #8f8f98;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+        }
+
+        /* Scifi progress track and glowing bar */
+        .loading-bar-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(240, 240, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #a33eff, #00f0ff);
+            box-shadow: 0 0 12px #00f0ff;
+            transition: width 0.1s linear;
+        }
+
+        .loading-status-text {
+            margin-top: 12px;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #00ff88;
+            text-shadow: 0 0 5px rgba(0,255,136,0.3);
+            min-height: 16px;
+        }
+
+        /* Main App Interface window */
         .app-window {
             width: 100%;
             max-width: 550px;
@@ -210,7 +301,7 @@
             cursor: not-allowed; 
         }
         
-        /* ⚡ TOUCH ACTION FIX: Tells mobile browsers to click instantly instead of checking for double-taps */
+        /* ⚡ MOBILE FAST-CLICK TOUCH PROTECTION ACTION CSS LINK RULE */
         .click-btn { 
             background: var(--text-main); 
             color: var(--bg-window); 
@@ -252,7 +343,7 @@
         .badge { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 10px 4px; border-radius: 8px; font-size: 0.7rem; color: var(--btn-disabled-text); font-weight: bold; }
         .badge.unlocked { border-color: #ffaa00; color: #ffaa00; background: rgba(255, 170, 0, 0.05); }
 
-        /* Pop-up Overlay Configuration Menu */
+        /* Configuration Menu Pop-up panel style rules */
         .settings-modal {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -295,9 +386,21 @@
 </head>
 <body>
 
+    <!-- Space Loading Overlay Container Block -->
+    <div id="loading-screen">
+        <div class="space-background"></div>
+        <div class="loading-container">
+            <div class="loading-logo">Cyber Tycoon</div>
+            <div class="loading-subtext">Quantum Horizon Engine v4.0</div>
+            <div class="loading-bar-container">
+                <div id="load-progress" class="loading-bar-fill"></div>
+            </div>
+            <div id="load-status" class="loading-status-text">CONNECTING TO TERMINAL SYSTEM...</div>
+        </div>
+    </div>
+
+    <!-- Main Game Window Frame -->
     <div class="app-window">
-        
-        <!-- Main Interface Header -->
         <div class="header-panel">
             <div class="title-row">
                 <h1>Cyber Tycoon</h1>
@@ -320,9 +423,7 @@
             </div>
         </div>
 
-        <!-- Scrollable Shop Interface -->
         <div class="scrollable-content">
-            <!-- Main Tap Button equipped with touch-action protection -->
             <button class="click-btn" onclick="clickGain()">⚡ Tap Mainframe Terminal (+$<span id="click-val-display">1</span>)</button>
             <button id="frenzy-trigger" class="frenzy-btn" style="display: none;" onclick="startFrenzy()">🔥 ACTIVATE CORE OVERDRIVE (5x OUTPUT)</button>
 
@@ -353,7 +454,6 @@
             <button id="rebirth-btn" class="rebirth-btn" onclick="triggerRebirth()"><span>✨ Force Rebirth (Requires $<span id="rebirth-cost-display">10,000,000</span>)</span></button>
         </div>
 
-        <!-- Sliding Settings Modal Overlay Menu -->
         <div id="settings-modal" class="settings-modal">
             <div class="modal-header">
                 <h2 style="margin:0;">⚙️ System Core Control Panel</h2>
@@ -392,12 +492,53 @@
             </center>
         </div>
 
-        <!-- Permanent Visible Footer Anchor -->
         <div class="fixed-footer">Made By <span>Yhonatan Akiva</span></div>
     </div>
 
     <script>
-        // Core Web Audio API Sound Generation Synthesizer Mechanics
+        // Space Loading Simulation Controller Logic
+        function runSpaceLoadingSequence() {
+            const bar = document.getElementById('load-progress');
+            const status = document.getElementById('load-status');
+            const overlay = document.getElementById('loading-screen');
+            
+            const logSteps = [
+                { p: 15, msg: "INITIATING QUANTUM HORIZON MODULES..." },
+                { p: 35, msg: "FETCHING LOCALSTORAGE BACKUP CORE DATA..." },
+                { p: 60, msg: "SYNCHRONIZING ANTIMATTER INJECTORS..." },
+                { p: 85, msg: "STABILIZING DEVICE TAP MANIFOLD SURFACE..." },
+                { p: 100, msg: "SPACE ENGINE ENGINE ONLINE. WELCOME COMMANDER." }
+            ];
+
+            let currentPercentage = 0;
+            let currentStepIdx = 0;
+
+            let interval = setInterval(() => {
+                if (currentPercentage < 100) {
+                    currentPercentage += Math.floor(Math.random() * 4) + 1;
+                    if (currentPercentage > 100) currentPercentage = 100;
+                    
+                    bar.style.width = currentPercentage + "%";
+
+                    if (currentStepIdx < logSteps.length && currentPercentage >= logSteps[currentStepIdx].p) {
+                        status.innerText = logSteps[currentStepIdx].msg;
+                        currentStepIdx++;
+                    }
+                } else {
+                    clearInterval(interval);
+                    // Fade out animation wrap
+                    setTimeout(() => {
+                        overlay.style.opacity = '0';
+                        overlay.style.transform = 'scale(1.05)';
+                        setTimeout(() => {
+                            overlay.style.display = 'none';
+                        }, 600);
+                    }, 500);
+                }
+            }, 50);
+        }
+
+        // Web Audio Synthesizer Engine Configuration 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         let globalVolumeSetting = 1.0;
 
@@ -406,19 +547,15 @@
             try {
                 let osc = audioCtx.createOscillator();
                 let gainNode = audioCtx.createGain();
-                
                 osc.type = type;
                 osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                
                 gainNode.gain.setValueAtTime(globalVolumeSetting * 0.1, audioCtx.currentTime);
                 gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-                
                 osc.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
-                
                 osc.start();
                 osc.stop(audioCtx.currentTime + duration);
-            } catch(e) { console.log("Audio activation context deferred."); }
+            } catch(e) { console.log("Audio framework initialization delayed."); }
         }
 
         function soundClick() { playSynthSound(587.33, 'triangle', 0.08); }
@@ -609,7 +746,6 @@
             }
         }
 
-        /* Settings Configurations and Profile Management Layers */
         function toggleSettings(open) {
             document.getElementById('settings-modal').style.display = open ? 'flex' : 'none';
         }
@@ -670,7 +806,7 @@
                         document.getElementById('motion-toggle').checked = gameData.settings.reduceMotion;
                         toggleMotion(gameData.settings.reduceMotion);
                     }
-                } catch(e) { console.error("Database structural fault encountered on recovery step.", e); }
+                } catch(e) { console.error("Database recovery compilation fault.", e); }
             }
             recalculateIncome();
             updateXpBar();
@@ -684,14 +820,18 @@
             }
         }
 
-        // Clock step loops running calculation cycles every 100ms
+        // Ticking engine game clock running calculation cycles every 100ms
         setInterval(function() {
             gameData.cash += (gameData.income / 10);
             updateUI();
         }, 100);
 
         setInterval(saveGame, 15000);
-        window.onload = loadGame;
+        
+        window.onload = function() {
+            loadGame();
+            runSpaceLoadingSequence(); // Fires loading bar sequence once page DOM structures load
+        };
     </script>
 </body>
 </html>
