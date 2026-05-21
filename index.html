@@ -1,845 +1,631 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cyber Tycoon 4.0: Cosmic Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Tycoon: Cosmic Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Variables to handle Themes dynamically */
         :root {
-            --bg-body: #0a0a0d;
-            --bg-window: #13131a;
-            --bg-panel: #1a1a24;
-            --bg-box: #0d0d12;
-            --border-color: #22222b;
-            --text-main: #e1e1e6;
-            --text-sub: #8f8f98;
-            --accent-green: #00ff88;
-            --accent-glow: rgba(0, 255, 136, 0.3);
-            --btn-disabled: #1a1a24;
-            --btn-disabled-text: #4e4e5e;
-            --btn-hover-glow: rgba(0, 255, 136, 0.3);
+            --bg-color: #0a0b10;
+            --panel-bg: rgba(20, 22, 37, 0.6);
+            --primary-neon: #00f0ff;
+            --secondary-neon: #ff007f;
+            --text-color: #ffffff;
+            --text-muted: #8fa0dd;
+            --border-color: rgba(0, 240, 255, 0.2);
         }
 
-        /* Light Theme Values */
-        [data-theme="light"] {
-            --bg-body: #f0f2f5;
-            --bg-window: #ffffff;
-            --bg-panel: #f7f9fa;
-            --bg-box: #edf2f4;
-            --border-color: #dcdfe3;
-            --text-main: #1c1e21;
-            --text-sub: #606770;
-            --accent-green: #00aa5b;
-            --accent-glow: rgba(0, 170, 91, 0.15);
-            --btn-disabled: #e4e6eb;
-            --btn-disabled-text: #bcc0c4;
-            --btn-hover-glow: rgba(0, 170, 91, 0.2);
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        /* AMOLED Pitch Black Theme Values */
-        [data-theme="amoled"] {
-            --bg-body: #000000;
-            --bg-window: #000000;
-            --bg-panel: #000000;
-            --bg-box: #000000;
-            --border-color: #333333;
-            --accent-glow: none;
-            --btn-hover-glow: none;
-        }
-
-        /* Matrix Blue Theme Values */
-        [data-theme="matrix"] {
-            --bg-body: #020b14;
-            --bg-window: #051622;
-            --bg-panel: #0b253a;
-            --bg-box: #020c14;
-            --border-color: #1a4a6e;
-            --text-main: #00f0ff;
-            --text-sub: #1a8f9e;
-            --accent-green: #00f0ff;
-            --accent-glow: rgba(0, 240, 255, 0.3);
-            --btn-hover-glow: rgba(0, 240, 255, 0.4);
-        }
-
-        html, body {
-            height: 100%;
+        body {
             margin: 0;
             padding: 0;
-            background: var(--bg-body); 
-            color: var(--text-main); 
-            font-family: 'Segoe UI', system-ui, sans-serif; 
-            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: 'Rubik', 'Orbitron', sans-serif;
+            color: var(--text-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            transition: background 0.3s ease;
-        }
-
-        /* 🚀 COSMIC SPACE LOADING OVERLAY */
-        #loading-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #030308;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            min-height: 100vh;
             overflow: hidden;
+            direction: ltr;
         }
 
-        /* Floating Stars Canvas Area */
-        .space-background {
-            position: absolute;
-            width: 200%; height: 200%;
-            background-image: 
-                radial-gradient(1px 1px at 25px 35px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1.5px 1.5px at 60px 120px, #00f0ff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 150px 80px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 250px 300px, #a33eff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 350px 200px, #fff, rgba(0,0,0,0));
-            background-size: 400px 400px;
-            animation: spaceDrift 40s linear infinite;
-            opacity: 0.6;
-            z-index: 1;
+        /* אפקט רעידת מסך */
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(0px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(2px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(2px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
 
-        @keyframes spaceDrift {
-            from { transform: translate(0, 0); }
-            to { transform: translate(-100px, -100px); }
+        .shaking {
+            animation: shake 0.15s infinite;
         }
 
-        .loading-container {
-            position: relative;
-            z-index: 2;
-            text-align: center;
-            width: 85%;
-            max-width: 380px;
+        /* פלאש כתום ברקע של ה-Overdrive */
+        @keyframes orangePulse {
+            0% { background-color: rgba(255, 100, 0, 0.15); }
+            50% { background-color: rgba(255, 60, 0, 0.35); }
+            100% { background-color: rgba(255, 100, 0, 0.15); }
         }
 
-        .loading-logo {
-            font-size: 2.2rem;
-            font-weight: bold;
-            color: #00f0ff;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            margin-bottom: 5px;
-            text-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        .overdrive-bg {
+            animation: orangePulse 0.6s infinite ease-in-out;
         }
 
-        .loading-subtext {
-            font-size: 0.8rem;
-            color: #8f8f98;
-            letter-spacing: 2px;
-            margin-bottom: 40px;
-            text-transform: uppercase;
-        }
-
-        /* Scifi progress track and glowing bar */
-        .loading-bar-container {
+        #game-container {
             width: 100%;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(240, 240, 255, 0.1);
-            border-radius: 10px;
-            overflow: hidden;
-            position: relative;
-            box-sizing: border-box;
-        }
-
-        .loading-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #a33eff, #00f0ff);
-            box-shadow: 0 0 12px #00f0ff;
-            transition: width 0.1s linear;
-        }
-
-        .loading-status-text {
-            margin-top: 12px;
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: #00ff88;
-            text-shadow: 0 0 5px rgba(0,255,136,0.3);
-            min-height: 16px;
-        }
-
-        /* Main App Interface window */
-        .app-window {
-            width: 100%;
-            max-width: 550px;
+            max-width: 500px;
             height: 100vh;
+            background: radial-gradient(circle at center, #14172e 0%, #0a0b10 100%);
+            position: relative;
             display: flex;
             flex-direction: column;
-            background: var(--bg-window);
-            box-shadow: 0 0 40px var(--accent-glow);
+            justify-content: space-between;
+            padding: 20px;
             border-left: 1px solid var(--border-color);
             border-right: 1px solid var(--border-color);
-            box-sizing: border-box;
-            position: relative;
-            transition: background 0.3s, border 0.3s;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
         }
 
-        .header-panel {
-            padding: 20px 25px 15px 25px;
-            background: var(--bg-panel);
-            border-bottom: 2px solid var(--border-color);
+        #canvas-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
         }
-        
-        .title-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        .ui-element {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* כותרת עליונה */
+        .header {
+            text-align: center;
+            background: var(--panel-bg);
+            padding: 15px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
+        }
+
+        .game-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(45deg, var(--primary-neon), var(--secondary-neon));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0 0 5px 0;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .creator-tag {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* תצוגת סטטוס וכסף */
+        .stats-panel {
+            background: var(--panel-bg);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
+            margin-top: 15px;
+        }
+
+        .cash-display {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 15px var(--primary-neon);
             margin-bottom: 5px;
         }
-        
-        h1 { color: var(--accent-green); font-size: 2.1rem; margin: 0; text-shadow: var(--accent-glow); }
-        
-        .level-badge {
-            background: #0077ff;
-            color: white;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            box-shadow: 0 0 8px rgba(0,119,255,0.4);
-        }
-        
-        .xp-bar-bg {
-            background: var(--border-color);
-            height: 6px;
-            width: 100%;
-            border-radius: 3px;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
-        
-        .xp-bar-fill {
-            background: #0077ff;
-            height: 100%;
-            width: 0%;
-            transition: width 0.2s ease;
-        }
-        
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        
-        .stat-box {
-            background: var(--bg-box);
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            text-align: center;
-        }
-        .stat-box.full { grid-column: span 2; position: relative; }
-        .stat { font-size: 2.2rem; font-weight: bold; }
-        .stat-lbl { font-size: 0.7rem; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
-        .sub-stat { font-size: 1.1rem; color: var(--accent-green); font-weight: bold; }
-        .rebirth-stat { color: #a33eff; font-size: 1.1rem; font-weight: bold; }
 
-        .frenzy-alert {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: #ff0055;
-            border-radius: 8px;
+        .lps-display {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* כפתור הטרמינל הראשי */
+        .terminal-wrapper {
+            flex-grow: 1;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: white;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-            text-shadow: 0 0 10px rgba(255,0,85,0.6);
+            position: relative;
         }
-        body:not(.reduce-motion) .frenzy-alert {
-            animation: pulse 1s infinite alternate;
-        }
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.02); } }
 
-        .scrollable-content {
-            flex: 1;
+        .main-terminal {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #1a1d36 0%, #0c0e1a 100%);
+            border: 4px solid var(--primary-neon);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.2);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.05s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .main-terminal:active {
+            transform: scale(0.94);
+            box-shadow: 0 0 40px var(--secondary-neon), inset 0 0 20px rgba(255, 0, 127, 0.4);
+            border-color: var(--secondary-neon);
+        }
+
+        .terminal-icon {
+            font-size: 40px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px var(--primary-neon);
+        }
+
+        .terminal-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+
+        /* חנות שדרוגים */
+        .upgrades-container {
+            max-height: 250px;
             overflow-y: auto;
-            padding: 15px 25px 25px 25px; 
-            box-sizing: border-box;
+            background: var(--panel-bg);
+            border-radius: 16px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(8px);
         }
 
-        button { 
-            background: var(--accent-green); 
-            color: var(--bg-box); 
-            border: none; 
-            padding: 14px; 
-            font-size: 0.95rem; 
-            font-weight: bold; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            transition: all 0.15s ease; 
-            margin: 6px 0; 
-            width: 100%; 
+        .upgrades-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .upgrades-container::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 3px;
+        }
+
+        .upgrade-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-sizing: border-box;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
         }
-        button:hover:not(:disabled) { 
-            background: var(--accent-green);
-            filter: brightness(1.15);
-            transform: scale(1.01);
-            box-shadow: var(--btn-hover-glow);
-        }
-        button:active:not(:disabled) { transform: scale(0.99); }
-        button:disabled { 
-            background: var(--btn-disabled); 
-            color: var(--btn-disabled-text); 
-            cursor: not-allowed; 
-        }
-        
-        /* ⚡ MOBILE FAST-CLICK TOUCH PROTECTION ACTION CSS LINK RULE */
-        .click-btn { 
-            background: var(--text-main); 
-            color: var(--bg-window); 
-            justify-content: center; 
-            font-size: 1.1rem; 
-            margin-bottom: 10px; 
-            touch-action: manipulation; 
-        }
-        .click-btn:hover:not(:disabled) { background: var(--text-main); filter: brightness(0.9); }
-        
-        .settings-icon-btn {
-            background: transparent; color: var(--text-sub); width: auto; padding: 6px 12px; margin: 0; font-size: 1.1rem;
-        }
-        .settings-icon-btn:hover { background: var(--bg-box); color: var(--text-main); box-shadow: none; transform: none; }
 
-        .frenzy-btn {
-            background: linear-gradient(45deg, #ff0055, #ff5500); color: white; justify-content: center;
+        .upgrade-card:hover {
+            background: rgba(0, 240, 255, 0.05);
+            border-color: rgba(0, 240, 255, 0.3);
         }
-        body:not(.reduce-motion) .frenzy-btn {
-            animation: flashGlow 2s infinite;
-        }
-        @keyframes flashGlow { 0%, 100% { box-shadow: 0 0 10px rgba(255,0,85,0.4); } 50% { box-shadow: 0 0 25px rgba(255,0,85,0.8); } }
 
-        .rebirth-btn { background: #a33eff; color: white; justify-content: center; font-size: 1.1rem; margin-top: 15px;}
-        .rebirth-btn:hover:not(:disabled) { background: #b452ff; box-shadow: 0 0 15px rgba(163,62,255,0.4); }
-
-        .section-title { 
-            margin: 25px 0 10px 0; 
-            color: var(--text-sub); 
-            text-align: left; 
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 4px;
-        }
-        
-        .badge-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0 20px 0; }
-        .badge { background: var(--bg-panel); border: 1px solid var(--border-color); padding: 10px 4px; border-radius: 8px; font-size: 0.7rem; color: var(--btn-disabled-text); font-weight: bold; }
-        .badge.unlocked { border-color: #ffaa00; color: #ffaa00; background: rgba(255, 170, 0, 0.05); }
-
-        /* Configuration Menu Pop-up panel style rules */
-        .settings-modal {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--bg-window);
-            z-index: 100;
-            display: none;
+        .upgrade-info {
+            display: flex;
             flex-direction: column;
-            padding: 25px;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .setting-item { margin-bottom: 20px; text-align: left; }
-        .setting-item label { display: block; font-weight: bold; font-size: 0.95rem; margin-bottom: 8px; color: var(--text-main); }
-        .setting-item select, .setting-item input[type="range"] {
-            width: 100%; background: var(--bg-box); border: 1px solid var(--border-color); color: var(--text-main); padding: 10px; border-radius: 6px; box-sizing: border-box;
-        }
-        .setting-item select:focus { outline: 1px solid var(--accent-green); }
-        .toggle-row { display: flex; justify-content: space-between; align-items: center; }
-
-        .settings-credit-block {
-            background: var(--bg-box);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            margin: 15px 0;
-            text-align: center;
-        }
-        .settings-credit-name {
-            font-size: 1.6rem;
-            color: var(--accent-green);
-            margin: 0;
-            text-shadow: var(--accent-glow);
-            font-weight: bold;
+            text-align: left;
         }
 
-        .danger-btn {
-            background: transparent; color: #ff3344; border: 1px solid #3d1418;
-            font-size: 0.8rem; padding: 6px 12px; margin: 10px 0; justify-content: center; width: auto; display: inline-flex;
+        .upgrade-name {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 2px;
         }
-        .danger-btn:hover { background: #3d1418; }
+
+        .upgrade-stats {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .upgrade-cost {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            color: #ffb800;
+        }
+
+        /* כפתור ריברס / תפריט */
+        .footer-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Rubik', sans-serif;
+            font-size: 13px;
+        }
+
+        .btn:hover {
+            background: var(--secondary-neon);
+            border-color: var(--secondary-neon);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+        }
+
+        /* מספרים צפים בלחיצה */
+        .floating-text {
+            position: absolute;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 22px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--primary-neon);
+            pointer-events: none;
+            z-index: 10;
+            animation: floatUp 0.8s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-100px) scale(0.8); }
+        }
     </style>
 </head>
 <body>
 
-    <div id="loading-screen">
-        <div class="space-background"></div>
-        <div class="loading-container">
-            <div class="loading-logo">Cyber Tycoon</div>
-            <div class="loading-subtext">Quantum Horizon Engine v4.0</div>
-            <div class="loading-bar-container">
-                <div id="load-progress" class="loading-bar-fill"></div>
-            </div>
-            <div id="load-status" class="loading-status-text">CONNECTING TO TERMINAL SYSTEM...</div>
-        </div>
-    </div>
+    <div id="game-container">
+        <canvas id="canvas-bg"></canvas>
 
-    <div class="app-window">
-        <div class="header-panel">
-            <div class="title-row">
-                <h1>Cyber Tycoon</h1>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <button class="settings-icon-btn" onclick="toggleSettings(true)">⚙️ Settings</button>
-                    <div class="level-badge">LVL <span id="lvl-display">1</span></div>
-                </div>
-            </div>
-            
-            <div class="xp-bar-bg"><div id="xp-fill" class="xp-bar-fill"></div></div>
-            
-            <div class="dashboard">
-                <div class="stat-box full">
-                    <div class="stat">$<span id="cash-display">0</span></div>
-                    <div class="stat-lbl">Network Liquidity</div>
-                    <div id="frenzy-overlay" class="frenzy-alert">⚠️ OVERDRIVE FRENZY x5!!</div>
-                </div>
-                <div class="stat-box"><div class="sub-stat">+$<span id="income-display">0</span>/s</div><div class="stat-lbl">Automation Rate</div></div>
-                <div class="stat-box"><div class="rebirth-stat">x<span id="multiplier-display">1</span></div><div class="stat-lbl">Multiplier</div></div>
+        <div class="header ui-element">
+            <h1 class="game-title">CYBER TYCOON</h1>
+            <div class="creator-tag">Made By Yhonatan Akiva</div>
+        </div>
+
+        <div class="stats-panel ui-element">
+            <div class="cash-display" id="cash-text">$0</div>
+            <div class="lps-display" id="lps-text">LPS: +0 / sec</div>
+        </div>
+
+        <div class="terminal-wrapper ui-element">
+            <div class="main-terminal" id="click-terminal">
+                <div class="terminal-icon">💻</div>
+                <div class="terminal-text">TAP SYSTEM</div>
             </div>
         </div>
 
-        <div class="scrollable-content">
-            <button class="click-btn" onclick="clickGain()">⚡ Tap Mainframe Terminal (+$<span id="click-val-display">1</span>)</button>
-            <button id="frenzy-trigger" class="frenzy-btn" style="display: none;" onclick="startFrenzy()">🔥 ACTIVATE CORE OVERDRIVE (5x OUTPUT)</button>
-
-            <div class="section-title">Global Perks</div>
-            <div class="badge-row">
-                <div id="ach0" class="badge">💰<br>$10K Cash</div>
-                <div id="ach1" class="badge">🏭<br>10 Assets</div>
-                <div id="ach2" class="badge">🌟<br>Level 5</div>
-                <div id="ach3" class="badge">👑<br>First Rebirth</div>
+        <div class="upgrades-container ui-element" id="upgrades-list">
             </div>
 
-            <div class="section-title">Manual Click Configurations</div>
-            <button id="click1-btn" onclick="buyClickUpgrade('click1')"><span>👆 Plastic Mouse (+2/click)</span><span id="click1-cost">$25</span></button>
-            <button id="click2-btn" onclick="buyClickUpgrade('click2')"><span>⚡ Copper Wiring (+15/click)</span><span id="click2-cost">$200</span></button>
-            <button id="click3-btn" onclick="buyClickUpgrade('click3')"><span>🔋 Kinetic Battery (+110/click)</span><span id="click3-cost">$1,500</span></button>
-            <button id="click4-btn" onclick="buyClickUpgrade('click4')"><span>🧠 Neural Link (+850/click)</span><span id="click4-cost">$12,000</span></button>
-            <button id="click5-btn" onclick="buyClickUpgrade('click5')"><span>🌌 Quantum Hand (+6.5K/click)</span><span id="click5-cost">$95,000</span></button>
-
-            <div class="section-title">Industrial Dropper Subsystems</div>
-            <button id="dropper1-btn" onclick="buyAsset('dropper1')"><span>🏗️ Basic Dropper (<span id="d1-inc"></span>/s)</span><span id="dropper1-cost">$15</span></button>
-            <button id="dropper2-btn" onclick="buyAsset('dropper2')"><span>🚀 Plasma Dropper (<span id="d2-inc"></span>/s)</span><span id="dropper2-cost">$150</span></button>
-            <button id="dropper3-btn" onclick="buyAsset('dropper3')"><span>🌌 Quantum Core (<span id="d3-inc"></span>/s)</span><span id="dropper3-cost">$1,200</span></button>
-            <button id="dropper4-btn" onclick="buyAsset('dropper4')"><span>🔮 Cyber Matrix (<span id="d4-inc"></span>/s)</span><span id="dropper4-cost">$12,500</span></button>
-            <button id="dropper5-btn" onclick="buyAsset('dropper5')"><span>🧬 Antimatter Forge (<span id="d5-inc"></span>/s)</span><span id="dropper5-cost">$140,000</span></button>
-            <button id="dropper6-btn" onclick="buyAsset('dropper6')"><span>👑 Singularity Engine (<span id="d6-inc"></span>/s)</span><span id="dropper6-cost">$1,500,000</span></button>
-
-            <div class="section-title">Quantum Horizon Reset</div>
-            <button id="rebirth-btn" class="rebirth-btn" onclick="triggerRebirth()"><span>✨ Force Rebirth (Requires $<span id="rebirth-cost-display">10,000,000</span>)</span></button>
-        </div>
-
-        <div id="settings-modal" class="settings-modal">
-            <div class="modal-header">
-                <h2 style="margin:0;">⚙️ System Core Control Panel</h2>
-                <button class="settings-icon-btn" style="font-size:1.5rem;" onclick="toggleSettings(false)">✕</button>
-            </div>
-            
-            <div class="setting-item">
-                <label for="theme-select">🎨 Interface Theme Preset</label>
-                <select id="theme-select" onchange="changeTheme(this.value)">
-                    <option value="dark">Cyber Dark Theme (Default)</option>
-                    <option value="light">Crisp Light Theme</option>
-                    <option value="amoled">High-Contrast AMOLED Black</option>
-                    <option value="matrix">Matrix Neon Blue Terminal</option>
-                </select>
-            </div>
-
-            <div class="setting-item">
-                <label for="volume-range">🔊 Sound Effects Master Volume (<span id="vol-lbl">100</span>%)</label>
-                <input type="range" id="volume-range" min="0" max="100" value="100" oninput="changeVolume(this.value)">
-            </div>
-
-            <div class="setting-item toggle-row">
-                <label for="motion-toggle">🐌 Power Saver (Disable Glow/Animations)</label>
-                <input type="checkbox" id="motion-toggle" style="transform: scale(1.3);" onchange="toggleMotion(this.checked)">
-            </div>
-
-            <div class="section-title">System Architecture Credits</div>
-            <div class="settings-credit-block">
-                <h3 class="settings-credit-name">Made By Yhonatan Akiva</h3>
-            </div>
-
-            <div class="section-title" style="margin-top:20px;">System Data Storage Profiling</div>
-            
-            <div class="setting-item">
-                <label>Export Save Data Code String</label>
-                <button class="click-btn" style="font-size:0.9rem; padding:8px;" onclick="exportSaveData()">Copy Profile String to Clipboard</button>
-            </div>
-            
-            <center style="margin-top:25px;">
-                <button class="danger-btn" onclick="resetGame()">Factory Reset Database (Wipe Profile)</button>
-            </center>
+        <div class="footer-actions ui-element">
+            <button class="btn" id="rebirth-btn">System Reset (Rebirth)</button>
         </div>
     </div>
 
     <script>
-        // Space Loading Simulation Controller Logic
-        function runSpaceLoadingSequence() {
-            const bar = document.getElementById('load-progress');
-            const status = document.getElementById('load-status');
-            const overlay = document.getElementById('loading-screen');
-            
-            const logSteps = [
-                { p: 15, msg: "INITIATING QUANTUM HORIZON MODULES..." },
-                { p: 35, msg: "FETCHING LOCALSTORAGE BACKUP CORE DATA..." },
-                { p: 60, msg: "SYNCHRONIZING ANTIMATTER INJECTORS..." },
-                { p: 85, msg: "STABILIZING DEVICE TAP MANIFOLD SURFACE..." },
-                { p: 100, msg: "SPACE ENGINE ENGINE ONLINE. WELCOME COMMANDER." }
-            ];
+        // --- מערכת ניהול דאטה ומצב משחק ---
+        let state = {
+            cash: 0,
+            lps: 0,
+            clickPower: 1,
+            rebirths: 0,
+            isOverdrive: false,
+            overdriveMultiplier: 1
+        };
 
-            let currentPercentage = 0;
-            let currentStepIdx = 0;
+        const upgradesConfig = [
+            { id: 'item1', name: 'Quantum Mouse', cost: 15, lps: 0.5, count: 0 },
+            { id: 'item2', name: 'Copper Core Link', cost: 100, lps: 4, count: 0 },
+            { id: 'item3', name: 'Auto Dropper v1', cost: 1100, lps: 32, count: 0 },
+            { id: 'item4', name: 'Antimatter Processor', cost: 12000, lps: 260, count: 0 },
+            { id: 'item5', name: 'Cyber Net Grid', cost: 130000, lps: 1400, count: 0 }
+        ];
 
-            let interval = setInterval(() => {
-                if (currentPercentage < 100) {
-                    currentPercentage += Math.floor(Math.random() * 4) + 1;
-                    if (currentPercentage > 100) currentPercentage = 100;
-                    
-                    bar.style.width = currentPercentage + "%";
+        // אלמנטים ב-DOM
+        const container = document.getElementById('game-container');
+        const cashText = document.getElementById('cash-text');
+        const lpsText = document.getElementById('lps-text');
+        const terminal = document.getElementById('click-terminal');
+        const upgradesList = document.getElementById('upgrades-list');
+        const rebirthBtn = document.getElementById('rebirth-btn');
+        const canvas = document.getElementById('canvas-bg');
+        const ctx = canvas.getContext('2d');
 
-                    if (currentStepIdx < logSteps.length && currentPercentage >= logSteps[currentStepIdx].p) {
-                        status.innerText = logSteps[currentStepIdx].msg;
-                        currentStepIdx++;
-                    }
-                } else {
-                    clearInterval(interval);
-                    // Fade out animation wrap
-                    setTimeout(() => {
-                        overlay.style.opacity = '0';
-                        overlay.style.transform = 'scale(1.05)';
-                        setTimeout(() => {
-                            overlay.style.display = 'none';
-                        }, 600);
-                    }, 500);
-                }
-            }, 50);
+        // התאמת גודל קנבס
+        function resizeCanvas() {
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
         }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-        // Web Audio Synthesizer Engine Configuration 
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        let globalVolumeSetting = 1.0;
+        // --- מנוע ה-Overdrive: חלליות, מטאורים, פלאש ורעידות ---
+        let entities = [];
 
-        function playSynthSound(freq, type, duration) {
-            if (globalVolumeSetting <= 0) return;
-            try {
-                let osc = audioCtx.createOscillator();
-                let gainNode = audioCtx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(globalVolumeSetting * 0.1, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + duration);
-            } catch(e) { console.log("Audio framework initialization delayed."); }
-        }
-
-        function soundClick() { playSynthSound(587.33, 'triangle', 0.08); }
-        function soundBuy() { playSynthSound(880, 'sine', 0.15); setTimeout(() => playSynthSound(1318.51, 'sine', 0.2), 60); }
-        function soundLevel() { playSynthSound(523.25, 'sawtooth', 0.2); setTimeout(() => playSynthSound(659.25, 'sawtooth', 0.2), 100); setTimeout(() => playSynthSound(783.99, 'sawtooth', 0.4), 200); }
-        function soundFrenzy() { playSynthSound(150, 'sawtooth', 0.5); playSynthSound(300, 'triangle', 0.5); }
-
-        const dropperConfigs = {
-            dropper1: { baseCost: 15, incomeVal: 1, scale: 1.32 },
-            dropper2: { baseCost: 150, incomeVal: 8, scale: 1.34 },
-            dropper3: { baseCost: 1200, incomeVal: 70, scale: 1.36 },
-            dropper4: { baseCost: 12500, incomeVal: 620, scale: 1.38 },
-            dropper5: { baseCost: 140000, incomeVal: 5300, scale: 1.4 },
-            dropper6: { baseCost: 1500000, incomeVal: 48000, scale: 1.42 }
-        };
-
-        const clickConfigs = {
-            click1: { baseCost: 25, addVal: 2, scale: 1.38 },
-            click2: { baseCost: 200, addVal: 15, scale: 1.42 },
-            click3: { baseCost: 1500, addVal: 110, scale: 1.46 },
-            click4: { baseCost: 12000, addVal: 850, scale: 1.5 },
-            click5: { baseCost: 95000, addVal: 6500, scale: 1.54 }
-        };
-
-        let gameData = {
-            cash: 0, income: 0, rebirths: 0, level: 1, xp: 0,
-            achievements: [false, false, false, false],
-            clicksOwned: { click1: 0, click2: 0, click3: 0, click4: 0, click5: 0 },
-            owned: { dropper1: 0, dropper2: 0, dropper3: 0, dropper4: 0, dropper5: 0, dropper6: 0 },
-            settings: { theme: 'dark', volume: 100, reduceMotion: false }
-        };
-
-        let activeFrenzyMode = false;
-        function getXpNeeded() { return gameData.level * 120; }
-
-        function addXp(amount) {
-            gameData.xp += amount;
-            let needed = getXpNeeded();
-            if (gameData.xp >= needed) {
-                gameData.xp -= needed;
-                gameData.level++;
-                gameData.cash += gameData.level * 250 * getRebirthMultiplier();
-                soundLevel();
+        function spawnEntity(type) {
+            if (type === 'meteor') {
+                entities.push({
+                    type: 'meteor',
+                    x: Math.random() * canvas.width * 1.5 - canvas.width * 0.5,
+                    y: -50,
+                    speed: Math.random() * 7 + 8,
+                    size: Math.random() * 15 + 10,
+                    angle: Math.PI / 4 + (Math.random() * 0.2 - 0.1) // זווית נפילה אלכסונית
+                });
+            } else if (type === 'spaceship') {
+                entities.push({
+                    type: 'spaceship',
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + 50,
+                    speed: Math.random() * 5 + 6,
+                    size: Math.random() * 20 + 15
+                });
             }
-            updateXpBar();
         }
 
-        // Handles background layout visual progress metrics
-        function updateXpBar() {
-            document.getElementById('xp-fill').style.width = `${Math.min((gameData.xp / getXpNeeded()) * 100, 100)}%`;
-            document.getElementById('lvl-display').innerText = gameData.level;
+        function updateAndRenderCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // עדכון וציור ישויות (רק כשה-Overdrive פעיל או שנשארו ישויות באוויר)
+            for (let i = entities.length - 1; i >= 0; i--) {
+                let e = entities[i];
+
+                if (e.type === 'meteor') {
+                    // תנועת מטאור לכיוון מטה-ימינה
+                    e.x += Math.cos(e.angle) * e.speed;
+                    e.y += Math.sin(e.angle) * e.speed;
+
+                    // ציור שובל האש של המטאור (כתום/אדום בוהק)
+                    let gradient = ctx.createLinearGradient(e.x, e.y, e.x - Math.cos(e.angle)*40, e.y - Math.sin(e.angle)*40);
+                    gradient.addColorStop(0, 'rgba(255, 200, 0, 1)');
+                    gradient.addColorStop(0.3, 'rgba(255, 80, 0, 0.8)');
+                    gradient.addColorStop(1, 'rgba(255, 0, 0, 0)');
+                    
+                    ctx.beginPath();
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = e.size / 2;
+                    ctx.moveTo(e.x, e.y);
+                    ctx.lineTo(e.x - Math.cos(e.angle)*50, e.y - Math.sin(e.angle)*50);
+                    ctx.stroke();
+
+                    // ליבת המטאור
+                    ctx.beginPath();
+                    ctx.fillStyle = '#fff';
+                    ctx.arc(e.x, e.y, e.size / 3, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // מחיקה אם יצא מהמסך
+                    if (e.y > canvas.height + 50 || e.x > canvas.width + 50) entities.splice(i, 1);
+
+                } else if (e.type === 'spaceship') {
+                    // חלליות נופלות/טסות למטה במהירות
+                    e.y -= e.speed;
+
+                    // זנב מנוע פלזמה כחול/כתום
+                    ctx.beginPath();
+                    ctx.fillStyle = state.isOverdrive ? 'rgba(255, 100, 0, 0.7)' : 'rgba(0, 240, 255, 0.6)';
+                    ctx.moveTo(e.x, e.y + e.size);
+                    ctx.lineTo(e.x - e.size/4, e.y + e.size + 15);
+                    ctx.lineTo(e.x + e.size/4, e.y + e.size + 15);
+                    ctx.fill();
+
+                    // גוף החללית (משולש סייבר עתידני)
+                    ctx.beginPath();
+                    ctx.fillStyle = '#e0e0e0';
+                    ctx.moveTo(e.x, e.y);
+                    ctx.lineTo(e.x - e.size / 2, e.y + e.size);
+                    ctx.lineTo(e.x + e.size / 2, e.y + e.size);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // מחיקה אם יצאה מלמעלה
+                    if (e.y < -50) entities.splice(i, 1);
+                }
+            }
+
+            requestAnimationFrame(updateAndRenderCanvas);
+        }
+        requestAnimationFrame(updateAndRenderCanvas);
+
+        // הפעלת אירוע הטירוף הקוסמי (Overdrive Frenzy)
+        function triggerOverdriveFrenzy() {
+            if (state.isOverdrive) return; // מונע כפל אירועים
+
+            state.isOverdrive = true;
+            state.overdriveMultiplier = 5;
+            
+            // הפעלת רעידות מסך וצבע רקע כתום מהבהב בקוד ה-CSS
+            container.classList.add('shaking', 'overdrive-bg');
+
+            // לולאת יצירת חלליות ומטאורים בקצב מהיר
+            let spawnInterval = setInterval(() => {
+                if (!state.isOverdrive) {
+                    clearInterval(spawnInterval);
+                    return;
+                }
+                spawnEntity('meteor');
+                spawnEntity('spaceship');
+                spawnEntity('meteor');
+            }, 100);
+
+            // סיום האירוע אחרי 10 שניות
+            setTimeout(() => {
+                state.isOverdrive = false;
+                state.overdriveMultiplier = 1;
+                container.classList.remove('shaking', 'overdrive-bg');
+            }, 10000);
         }
 
-        function getAchievementMultiplier() {
-            let totalUnlocked = 0;
-            gameData.achievements.forEach(ach => { if(ach) totalUnlocked++; });
-            return 1 + (totalUnlocked * 0.25);
+        // סיכוי רנדומלי של 5% להפעלת הטירוף בכל לחיצה בטרמינל
+        function checkOverdriveChance() {
+            if (!state.isOverdrive && Math.random() < 0.05) {
+                triggerOverdriveFrenzy();
+            }
         }
 
-        function getRebirthMultiplier() { return (1 + (gameData.rebirths * 1.5)) * getAchievementMultiplier(); }
-        function getRebirthCost() { return Math.floor(10000000 * Math.pow(5, gameData.rebirths)); }
-
-        function getClickPower() {
-            let baseClick = 1;
-            for(let key in clickConfigs) { baseClick += gameData.clicksOwned[key] * clickConfigs[key].addVal; }
-            let activePower = baseClick + Math.floor(gameData.income * 0.04); 
-            return activeFrenzyMode ? activePower * 5 : activePower;
-        }
-
-        function getClickCost(type) { return Math.floor(clickConfigs[type].baseCost * Math.pow(clickConfigs[type].scale, gameData.clicksOwned[type])); }
-        function getDropperCost(type) { return Math.floor(dropperConfigs[type].baseCost * Math.pow(dropperConfigs[type].scale, gameData.owned[type])); }
-
-        function recalculateIncome() {
-            let baseTotal = 0;
-            for (let key in dropperConfigs) { baseTotal += gameData.owned[key] * dropperConfigs[key].incomeVal; }
-            let calculated = baseTotal * getRebirthMultiplier();
-            gameData.income = activeFrenzyMode ? calculated * 5 : calculated;
-        }
-
-        function checkAchievements() {
-            if (!gameData.achievements[0] && gameData.cash >= 10000) gameData.achievements[0] = true;
-            let totalDroppers = 0;
-            for(let key in gameData.owned) { totalDroppers += gameData.owned[key]; }
-            if (!gameData.achievements[1] && totalDroppers >= 10) gameData.achievements[1] = true;
-            if (!gameData.achievements[2] && gameData.level >= 5) gameData.achievements[2] = true;
-            if (!gameData.achievements[3] && gameData.rebirths > 0) gameData.achievements[3] = true;
-
-            gameData.achievements.forEach((unlocked, index) => {
-                let badge = document.getElementById(`ach${index}`);
-                if (unlocked && badge) badge.classList.add('unlocked');
-            });
+        // --- לוגיקת משחק רגילה ועדכוני UI ---
+        function formatNumber(num) {
+            if (num >= 1e12) return (num / 1e12).toFixed(2) + 'T';
+            if (num >= 1e9) return (num / 1e9).toFixed(2) + 'B';
+            if (num >= 1e6) return (num / 1e6).toFixed(2) + 'M';
+            if (num >= 1e3) return (num / 1e3).toFixed(1) + 'K';
+            return num.toFixed(1).replace('.0', '');
         }
 
         function updateUI() {
-            document.getElementById('cash-display').innerText = Math.floor(gameData.cash).toLocaleString();
-            document.getElementById('income-display').innerText = Math.floor(gameData.income).toLocaleString();
-            document.getElementById('multiplier-display').innerText = getRebirthMultiplier().toFixed(2);
-            document.getElementById('click-val-display').innerText = Math.floor(getClickPower()).toLocaleString();
-
-            for(let key in clickConfigs) {
-                let currentCost = getClickCost(key);
-                document.getElementById(`${key}-cost`).innerText = `$${currentCost.toLocaleString()}`;
-                document.getElementById(`${key}-btn`).disabled = gameData.cash < currentCost;
-            }
-
-            for (let key in dropperConfigs) {
-                let currentCost = getDropperCost(key);
-                let displayedIncome = Math.floor(dropperConfigs[key].incomeVal * getRebirthMultiplier());
-                if (activeFrenzyMode) displayedIncome *= 5;
-                
-                document.getElementById(`${key}-cost`).innerText = `$${currentCost.toLocaleString()}`;
-                let shorthand = key === 'dropper1' ? 'd1' : key === 'dropper2' ? 'd2' : key === 'dropper3' ? 'd3' : key === 'dropper4' ? 'd4' : key === 'dropper5' ? 'd5' : 'd6';
-                document.getElementById(`${shorthand}-inc`).innerText = `+${displayedIncome.toLocaleString()}`;
-                document.getElementById(`${key}-btn`).disabled = gameData.cash < currentCost;
-            }
-
-            let rCost = getRebirthCost();
-            document.getElementById('rebirth-cost-display').innerText = rCost.toLocaleString();
-            document.getElementById('rebirth-btn').disabled = gameData.cash < rCost;
-            checkAchievements();
-        }
-
-        function clickGain() {
-            if(audioCtx.state === 'suspended') audioCtx.resume();
-            gameData.cash += getClickPower();
-            soundClick();
-            addXp(4);
-            if(!activeFrenzyMode && Math.random() < 0.02) {
-                document.getElementById('frenzy-trigger').style.display = 'flex';
-            }
-            updateUI();
-        }
-
-        function startFrenzy() {
-            document.getElementById('frenzy-trigger').style.display = 'none';
-            activeFrenzyMode = true;
-            document.getElementById('frenzy-overlay').style.opacity = '1';
-            soundFrenzy();
-            recalculateIncome();
-            updateUI();
+            cashText.innerText = '$' + formatNumber(state.cash);
+            lpsText.innerText = `LPS: +${formatNumber(state.lps)} / sec` + (state.isOverdrive ? ' (5x FRENZY ACTIVE!)' : '');
             
-            setTimeout(() => {
-                activeFrenzyMode = false;
-                document.getElementById('frenzy-overlay').style.opacity = '0';
-                recalculateIncome();
-                updateUI();
-            }, 5000);
-        }
-
-        // Processing transaction loops for player items
-        function buyClickUpgrade(type) {
-            let cost = getClickCost(type);
-            if (gameData.cash >= cost) {
-                gameData.cash -= cost;
-                gameData.clicksOwned[type]++;
-                soundBuy();
-                addXp(15);
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function buyAsset(type) {
-            let cost = getDropperCost(type);
-            if (gameData.cash >= cost) {
-                gameData.cash -= cost;
-                gameData.owned[type]++;
-                soundBuy();
-                addXp(25);
-                recalculateIncome();
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function triggerRebirth() {
-            let cost = getRebirthCost();
-            if (gameData.cash >= cost) {
-                gameData.cash = 0;
-                gameData.rebirths++;
-                gameData.level = 1;
-                gameData.xp = 0;
-                soundLevel();
-                for (let key in gameData.owned) gameData.owned[key] = 0;
-                for (let key in gameData.clicksOwned) gameData.clicksOwned[key] = 0;
-                recalculateIncome();
-                updateXpBar();
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function toggleSettings(open) {
-            document.getElementById('settings-modal').style.display = open ? 'flex' : 'none';
-        }
-
-        // Modifies layout preset visuals
-        function changeTheme(themeName) {
-            document.documentElement.setAttribute('data-theme', themeName);
-            gameData.settings.theme = themeName;
-            saveGame();
-        }
-
-        // Modifies volume settings globally
-        function changeVolume(val) {
-            globalVolumeSetting = val / 100;
-            document.getElementById('vol-lbl').innerText = val;
-            gameData.settings.volume = parseInt(val);
-            saveGame();
-        }
-
-        function toggleMotion(isChecked) {
-            if(isChecked) {
-                document.body.classList.add('reduce-motion');
-            } else {
-                document.body.classList.remove('reduce-motion');
-            }
-            gameData.settings.reduceMotion = isChecked;
-            saveGame();
-        }
-
-        function exportSaveData() {
-            let stringified = btoa(JSON.stringify(gameData));
-            navigator.clipboard.writeText(stringified).then(() => {
-                alert("Profile save string copied to device clipboard!");
+            // עדכון עלויות שדרוגים בכפתורים
+            upgradesConfig.forEach(upg => {
+                const card = document.getElementById(`card-${upg.id}`);
+                if (card) {
+                    card.querySelector('.upgrade-cost').innerText = '$' + formatNumber(upg.cost);
+                    card.querySelector('.upgrade-stats').innerText = `LPS: +${formatNumber(upg.lps)} | Own: ${upg.count}`;
+                }
             });
         }
 
-        // Automatic persistent database profiling systems
-        function saveGame() { localStorage.setItem('cyber_tycoon_v4_save', JSON.stringify(gameData)); }
+        function calculateLPS() {
+            let totalLps = 0;
+            upgradesConfig.forEach(upg => {
+                totalLps += upg.lps * upg.count;
+            });
+            // הכפלת הריברס + תוספת ה-Overdrive
+            state.lps = totalLps * (1 + state.rebirths) * state.overdriveMultiplier;
+        }
 
-        function loadGame() {
-            let saved = localStorage.getItem('cyber_tycoon_v4_save');
-            if (saved) {
-                try {
-                    let parsed = JSON.parse(saved);
-                    if (typeof parsed.cash === 'number') gameData.cash = parsed.cash;
-                    if (typeof parsed.rebirths === 'number') gameData.rebirths = parsed.rebirths;
-                    if (typeof parsed.level === 'number') gameData.level = parsed.level;
-                    if (typeof parsed.xp === 'number') gameData.xp = parsed.xp;
-                    if (parsed.achievements) gameData.achievements = parsed.achievements;
-                    if (parsed.owned) gameData.owned = { ...gameData.owned, ...parsed.owned };
-                    if (parsed.clicksOwned) gameData.clicksOwned = { ...gameData.clicksOwned, ...parsed.clicksOwned };
-                    
-                    if (parsed.settings) {
-                        gameData.settings = { ...gameData.settings, ...parsed.settings };
-                        document.getElementById('theme-select').value = gameData.settings.theme;
-                        changeTheme(gameData.settings.theme);
-                        
-                        document.getElementById('volume-range').value = gameData.settings.volume;
-                        changeVolume(gameData.settings.volume);
-                        
-                        document.getElementById('motion-toggle').checked = gameData.settings.reduceMotion;
-                        toggleMotion(gameData.settings.reduceMotion);
+        // יצירת חנות שדרוגים דינמית
+        function buildUpgradeShop() {
+            upgradesList.innerHTML = '';
+            upgradesConfig.forEach(upg => {
+                const card = document.createElement('div');
+                card.className = 'upgrade-card';
+                card.id = `card-${upg.id}`;
+                card.innerHTML = `
+                    <div class="upgrade-info">
+                        <div class="upgrade-name">${upg.name}</div>
+                        <div class="upgrade-stats">LPS: +${upg.lps} | Own: ${upg.count}</div>
+                    </div>
+                    <div class="upgrade-cost">$${upg.cost}</div>
+                `;
+                
+                card.addEventListener('click', () => {
+                    if (state.cash >= upg.cost) {
+                        state.cash -= upg.cost;
+                        upg.count++;
+                        upg.cost = Math.floor(upg.cost * 1.15); // הגדלת מחיר ב-15%
+                        calculateLPS();
+                        updateUI();
                     }
-                } catch(e) { console.error("Database recovery compilation fault.", e); }
-            }
-            recalculateIncome();
-            updateXpBar();
-            updateUI();
+                });
+                upgradesList.appendChild(card);
+            });
         }
 
-        function resetGame() {
-            if (confirm("Reset everything permanently? You will lose all achievements and configurations.")) {
-                localStorage.removeItem('cyber_tycoon_v4_save');
-                location.reload();
+        // אפקט טקסט ומספר צף בלחיצה
+        function createFloatingText(e, text) {
+            const rect = terminal.getBoundingClientRect();
+            const x = (e.clientX || rect.left + rect.width / 2) - container.getBoundingClientRect().left;
+            const y = (e.clientY || rect.top + rect.height / 2) - container.getBoundingClientRect().top;
+
+            const el = document.createElement('div');
+            el.className = 'floating-text';
+            el.innerText = text;
+            el.style.left = `${x - 15}px`;
+            el.style.top = `${y - 20}px`;
+
+            // צבע טקסט זהב במידה וזה במצב אוברדרייב
+            if (state.isOverdrive) {
+                el.style.color = '#ffaa00';
+                el.style.textShadow = '0 0 10px #ff5500';
             }
+
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 800);
         }
 
-        // Ticking engine game clock running calculation cycles every 100ms
-        setInterval(function() {
-            gameData.cash += (gameData.income / 10);
+        // אירוע לחיצה על הטרמינל הראשי
+        terminal.addEventListener('click', (e) => {
+            let gained = state.clickPower * (1 + state.rebirths) * state.overdriveMultiplier;
+            state.cash += gained;
+            
+            createFloatingText(e, `+$${formatNumber(gained)}`);
+            checkOverdriveChance();
             updateUI();
+        });
+
+        // כפתור Rebirth
+        rebirthBtn.addEventListener('click', () => {
+            if (state.cash >= 100000) { // מחיר ריברס קבוע
+                state.cash = 0;
+                state.rebirths++;
+                state.clickPower = 1 + state.rebirths;
+                
+                // איפוס שדרוגים
+                upgradesConfig.forEach(upg => {
+                    upg.count = 0;
+                    if (upg.id === 'item1') upg.cost = 15;
+                    if (upg.id === 'item2') upg.cost = 100;
+                    if (upg.id === 'item3') upg.cost = 1100;
+                    if (upg.id === 'item4') upg.cost = 12000;
+                    if (upg.id === 'item5') upg.cost = 130000;
+                });
+
+                calculateLPS();
+                buildUpgradeShop();
+                updateUI();
+                alert(`System Reset Complete! Welcome to Generation ${state.rebirths + 1}. Permanent multiplier increased!`);
+            } else {
+                alert("You need at least $100K to perform a System Reset!");
+            }
+        });
+
+        // לולאת הפקת רווחים פסיביים (כל 100 מילישניות לחלק ב-10)
+        setInterval(() => {
+            if (state.lps > 0) {
+                // חלוקה ב-10 כדי לתת תחושת זרימה רציפה וחלקלקה של הכסף שעולה
+                state.cash += (state.lps / 10);
+                updateUI();
+            }
         }, 100);
 
-        setInterval(saveGame, 15000);
-        
-        window.onload = function() {
-            loadGame();
-            runSpaceLoadingSequence(); // Fires loading bar sequence once page DOM structures load
-        };
+        // אתחול ראשוני של המשחק
+        buildUpgradeShop();
+        updateUI();
     </script>
 </body>
 </html>
